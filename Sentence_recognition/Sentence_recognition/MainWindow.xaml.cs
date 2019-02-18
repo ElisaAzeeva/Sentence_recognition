@@ -23,6 +23,8 @@ namespace Sentence_recognition
         public MainWindow()
         {
             InitializeComponent();
+
+
         }
     }
 }
