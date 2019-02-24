@@ -1,12 +1,45 @@
 ﻿<Window x:Class="Sentence_recognition.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sentence_recognition"
-        mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
+
+        <!-- https://stackoverflow.com/questions/2783845/virtualizing-an-itemscontrol -->
+        <!-- Делаем это через лист строк, т.к. если мы попробуем запихнуть, скажем, Войну и мир в 
+        TextBlock то он просто завитнет даже на достаточно мощьных машинах. Все текстовые поля в
+        WPF не предназначенны для отображения такого "большого" количества данных. -->
+        <!-- Этот способ имеет недостатки:
+                1) Прокрутка работает не совсем корректно.
         
+        -->
+        <ItemsControl 
+            x:Name="text"
+            VirtualizingStackPanel.IsVirtualizing="True"
+            ScrollViewer.CanContentScroll="True"
+            >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock TextWrapping="Wrap" Text="{Binding }"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <ScrollViewer 
+                        ScrollChanged="ScrollViewer_ScrollChanged" >
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
+            
+        </ItemsControl>
+
     </Grid>
 </Window>
