@@ -57,7 +57,9 @@ test test test test
                 new Token(2,4,SentenceMembers.Subject),
                 new Token(7,4,SentenceMembers.Predicate),
                 new Token(12,6,SentenceMembers.Definition),
-                new Token(19,4,SentenceMembers.Addition),
+                new Token(19,4,SentenceMembers.Circumstance),
+                new Token(25,4,SentenceMembers.Addition),
+
             };
 
             block.Inlines.Clear();
@@ -74,7 +76,7 @@ test test test test
                     case SentenceMembers.Definition:
                         return MyTextDecorations.WavyUnderline;
                     case SentenceMembers.Circumstance:
-                        //return MyTextDecorations.OverLine;
+                        return MyTextDecorations.DoubleUnderline;
                     case SentenceMembers.Application:
                     case SentenceMembers.Addition:
                         return MyTextDecorations.DashedUnderline;

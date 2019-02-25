@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -11,23 +12,40 @@ namespace System.Windows
         {
             {
                 // Init Underline
-                TextDecoration td = new TextDecoration();
-                td.Location = TextDecorationLocation.Underline;
-                Underline = new TextDecorationCollection();
-                Underline.Add(td);
+                Underline = new TextDecorationCollection
+                {
+                    new TextDecoration
+                    {
+                        PenThicknessUnit = TextDecorationUnit.FontRenderingEmSize,
+                        PenOffset = 1,
+                        Location = TextDecorationLocation.Underline,
+                        Pen = new Pen(Brushes.Black, 0.1) 
+                    }
+                };
                 Underline.Freeze();
             }
 
             {
+                var sp = new StackPanel();
+                sp.Children.Add(new Rectangle { Width = 2, Height = 1, Fill = Brushes.Black });
+                sp.Children.Add(new Rectangle { Width = 2, Height = 4 });
+                sp.Children.Add(new Rectangle { Width = 2, Height = 1, Fill = Brushes.Black });
+
                 // Init DoubleUnderline
                 DoubleUnderline = new TextDecorationCollection
                 {
                     new TextDecoration
                     {
-                        Location = TextDecorationLocation.Underline
+                        PenThicknessUnit = TextDecorationUnit.FontRenderingEmSize,
+                        PenOffset = 1,
+                        Location = TextDecorationLocation.Underline,
+                        Pen = new Pen(new VisualBrush
+                        {
+                            TileMode = TileMode.Tile,
+                            Visual = sp,
+                        }, 0.2)
                     }
                 };
-                DoubleUnderline.Freeze();
             }
 
             // Init WavyUnderline
@@ -37,6 +55,8 @@ namespace System.Windows
 
                 WavyUnderline = new TextDecorationCollection {
                     new TextDecoration {
+                        PenThicknessUnit = TextDecorationUnit.FontRenderingEmSize,
+                        //PenOffset = 1,
                         Location = TextDecorationLocation.Underline,
                         Pen = new Pen(new VisualBrush
                         {
@@ -47,7 +67,7 @@ namespace System.Windows
                             Visual = new Path
                             {
                                 Stroke = Brushes.Black,
-                                StrokeThickness = 1/2d,
+                                StrokeThickness = 0.8,
                                 StrokeEndLineCap = PenLineCap.Square,
                                 StrokeStartLineCap = PenLineCap.Square,
                                 Data = new PathGeometry(
@@ -65,11 +85,9 @@ namespace System.Windows
                                             )
                                     })
                             }
-                        }, 6*h)
+                        }, 0.2*h)
                     }
                 };
-
-                //WavyUnderline.Freeze();
             }
 
             // Init DashedUnderline
@@ -77,8 +95,10 @@ namespace System.Windows
                 DashedUnderline = new TextDecorationCollection {
                     new TextDecoration
                     {
+                        PenThicknessUnit = TextDecorationUnit.FontRenderingEmSize,
+                        PenOffset = 1,
                         Location = TextDecorationLocation.Underline,
-                        Pen = new Pen(Brushes.Black, 1)
+                        Pen = new Pen(Brushes.Black, 0.1)
                         {
                             DashStyle = new DashStyle(new List<double> { 4, 4 }, 0)
                         }
@@ -92,8 +112,10 @@ namespace System.Windows
                 DashDotedUnderline = new TextDecorationCollection {
                     new TextDecoration
                     {
+                        PenThicknessUnit = TextDecorationUnit.FontRenderingEmSize,
+                        PenOffset = 1,
                         Location = TextDecorationLocation.Underline,
-                        Pen = new Pen(Brushes.Black, 1)
+                        Pen = new Pen(Brushes.Black, 0.1)
                         {
                             DashStyle = new DashStyle(new List<double> { 4, 4, 0, 4 }, 0)
                         }
