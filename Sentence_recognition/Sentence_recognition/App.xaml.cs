@@ -13,5 +13,6 @@ namespace Sentence_recognition
     /// </summary>
     public partial class App : Application
     {
+      
     }
 }
