@@ -5,9 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sentence_recognition"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="600" Width="900">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <!-- 15 - good -->
-        <TextBlock x:Name="block" FontSize="15" />
+
+        <Border BorderBrush="#FFD60404" BorderThickness="2" Padding="47,3,30,3">
+            <Border BorderBrush="Green" BorderThickness="1">
+            <TextBlock 
+                x:Name="block" 
+                FontSize="15" 
+                TextWrapping="Wrap"
+                />
+            </Border>
+        </Border>
+
+        <DockPanel Grid.Column="1">
+            <Expander DockPanel.Dock="Top" Header="Текст">
+                <StackPanel>
+                    <CheckBox Content="Подлежащее" />
+                    <CheckBox Content="Сказуемое" />
+                    <CheckBox Content="Определение" />
+                    <CheckBox Content="Дополнение" />
+                    <CheckBox Content="Обстоятельство" />
+                </StackPanel>
+            </Expander>
+
+            <Expander DockPanel.Dock="Top" Header="Статистика">
+                
+            </Expander>
+
+            <Button 
+                DockPanel.Dock="Bottom"
+                Margin="5" Content="Открыть"/>
+
+            <!-- Это рамка нужна для автоматического расположения кнопки внизу -->
+            <Border />
+        </DockPanel>
+
     </Grid>
 </Window>
