@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -21,19 +20,37 @@ namespace Sentence_recognition
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Properties
 
+        public bool IsTextMode
+        {
+            get { return (bool)GetValue(IsTextModeProperty); }
+            set { SetValue(IsTextModeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsTextMode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsTextModeProperty =
+            DependencyProperty.Register("IsTextMode", typeof(bool), typeof(MainWindow), new PropertyMetadata(true));
+
+        #endregion
+
+        private RecognitionAPI recognazer;
 
         public MainWindow()
         {
             InitializeComponent();
-            var recognazer = new RecognitionAPI();
+            recognazer = new RecognitionAPI();
+        }
 
-            block.Inlines.Clear();
-
-            var (e, d) = recognazer.GetData("");
-
-            
-            block.Inlines.AddRange(RecognitionAPI.GetRuns(d));
+        private void Open(object sender, ExecutedRoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                block.Inlines.Clear();
+                var (errorCode, d) = recognazer.GetData(openFileDialog.FileName);
+                block.Inlines.AddRange(RecognitionAPI.GetRuns(d));
+            }
         }
     }
 }

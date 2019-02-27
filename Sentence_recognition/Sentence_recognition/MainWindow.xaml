@@ -5,16 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sentence_recognition"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="900">
+        Title="MainWindow" 
+        Height="600" 
+        Width="900"
+        x:Name="window">
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="Open"/>
+    </Window.CommandBindings>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <local:InverseBooleanConverter x:Key="Inverse" />
+        <local:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <!-- 15 - good -->
-
-        <Border BorderBrush="#FFD60404" BorderThickness="2" Padding="47,3,30,3">
-            <Border BorderBrush="Green" BorderThickness="1">
+        
+        <Border
+            Padding="47,3,30,3"
+            Visibility="{Binding IsTextMode, ElementName=window, Converter={StaticResource BoolToVisibility}}">
+            <!--Debug only -->
+            <Border 
+                BorderBrush="Green" 
+                BorderThickness="1">
+            <!-- 15 - good -->
             <TextBlock 
                 x:Name="block" 
                 FontSize="15" 
@@ -23,8 +39,18 @@
             </Border>
         </Border>
 
+        <Border 
+            Background="Khaki"
+            Visibility="{Binding IsTextMode, ElementName=window, Converter={StaticResource InverseBoolToVisibility}}">
+
+        </Border>
+
+
         <DockPanel Grid.Column="1">
-            <Expander DockPanel.Dock="Top" Header="Текст">
+            <Expander 
+                DockPanel.Dock="Top" 
+                Header="Текст"
+                IsExpanded="{Binding IsTextMode, ElementName=window}">
                 <StackPanel>
                     <CheckBox Content="Подлежащее" />
                     <CheckBox Content="Сказуемое" />
@@ -34,13 +60,17 @@
                 </StackPanel>
             </Expander>
 
-            <Expander DockPanel.Dock="Top" Header="Статистика">
-                
+            <Expander 
+                DockPanel.Dock="Top" 
+                Header="Статистика"
+                IsExpanded="{Binding IsTextMode, ElementName=window, Converter={StaticResource Inverse}}">
+                <Rectangle Fill="DarkKhaki" Height="100" />
             </Expander>
 
             <Button 
                 DockPanel.Dock="Bottom"
-                Margin="5" Content="Открыть"/>
+                Margin="5" Content="Открыть"
+                Command="Open"/>
 
             <!-- Это рамка нужна для автоматического расположения кнопки внизу -->
             <Border />
