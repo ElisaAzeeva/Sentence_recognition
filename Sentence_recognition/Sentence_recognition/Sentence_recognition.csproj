@@ -60,6 +60,7 @@
     <Compile Include="InverseBooleanConverter.cs" />
     <Compile Include="InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="RecognitionAPI.cs" />
+    <Compile Include="TEnumValueConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

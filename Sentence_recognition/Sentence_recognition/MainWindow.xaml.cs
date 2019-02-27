@@ -1,17 +1,7 @@
 ﻿using Microsoft.Win32;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Sentence_recognition
 {
@@ -30,11 +20,31 @@ namespace Sentence_recognition
 
         // Using a DependencyProperty as the backing store for IsTextMode.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsTextModeProperty =
-            DependencyProperty.Register("IsTextMode", typeof(bool), typeof(MainWindow), new PropertyMetadata(true));
+            DependencyProperty.Register("IsTextMode", typeof(bool), 
+                typeof(MainWindow), new PropertyMetadata(true));
+
+        public SentenceMembers SentenceMembers
+        {
+            get { return (SentenceMembers)GetValue(SentenceMembersProperty); }
+            set { SetValue(SentenceMembersProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SentenceMembers.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SentenceMembersProperty =
+            DependencyProperty.Register("SentenceMembers", typeof(SentenceMembers), 
+                typeof(MainWindow), new FrameworkPropertyMetadata((SentenceMembers)0x111111, 
+                    new PropertyChangedCallback(SentenceMembersUpdated)) );
+
+        private static void SentenceMembersUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is MainWindow mainWindow)
+                mainWindow.UpdateText();
+        }
 
         #endregion
 
         private RecognitionAPI recognazer;
+        private Data data;
 
         public MainWindow()
         {
@@ -47,10 +57,15 @@ namespace Sentence_recognition
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                block.Inlines.Clear();
-                var (errorCode, d) = recognazer.GetData(openFileDialog.FileName);
-                block.Inlines.AddRange(RecognitionAPI.GetRuns(d));
+                (_, data) = recognazer.GetData(openFileDialog.FileName);
+                UpdateText();
             }
+        }
+
+        void UpdateText()
+        {
+            block.Inlines.Clear();
+            block.Inlines.AddRange(RecognitionAPI.GetRuns(data, SentenceMembers));
         }
     }
 }

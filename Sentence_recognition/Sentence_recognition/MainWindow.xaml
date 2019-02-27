@@ -16,6 +16,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
         <local:InverseBooleanConverter x:Key="Inverse" />
         <local:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility" />
+        <local:SentenceMembersValueConverter x:Key="SentenceMembersToBool"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -51,12 +52,43 @@
                 DockPanel.Dock="Top" 
                 Header="Текст"
                 IsExpanded="{Binding IsTextMode, ElementName=window}">
-                <StackPanel>
-                    <CheckBox Content="Подлежащее" />
-                    <CheckBox Content="Сказуемое" />
-                    <CheckBox Content="Определение" />
-                    <CheckBox Content="Дополнение" />
-                    <CheckBox Content="Обстоятельство" />
+                <StackPanel Margin="0,5,0,5">
+                    <CheckBox  
+                        Content="Подлежащее" 
+                        IsChecked="{Binding SentenceMembers, 
+                                            ElementName=window, 
+                                            Converter={StaticResource SentenceMembersToBool}, 
+                                            ConverterParameter={x:Static local:SentenceMembers.Subject}}"/>
+                    <CheckBox 
+                        Content="Сказуемое" 
+                        IsChecked="{Binding SentenceMembers, 
+                                            ElementName=window, 
+                                            Converter={StaticResource SentenceMembersToBool}, 
+                                            ConverterParameter={x:Static local:SentenceMembers.Predicate}}"/>
+                    <CheckBox 
+                        Content="Определение" 
+                        IsChecked="{Binding SentenceMembers, 
+                                            ElementName=window, 
+                                            Converter={StaticResource SentenceMembersToBool}, 
+                                            ConverterParameter={x:Static local:SentenceMembers.Definition}}"/>
+                    <CheckBox 
+                        Content="Приложение" 
+                        IsChecked="{Binding SentenceMembers, 
+                                            ElementName=window, 
+                                            Converter={StaticResource SentenceMembersToBool}, 
+                                            ConverterParameter={x:Static local:SentenceMembers.Application}}"/>
+                    <CheckBox 
+                        Content="Дополнение" 
+                        IsChecked="{Binding SentenceMembers, 
+                                            ElementName=window, 
+                                            Converter={StaticResource SentenceMembersToBool}, 
+                                            ConverterParameter={x:Static local:SentenceMembers.Addition}}"/>
+                    <CheckBox 
+                        Content="Обстоятельство" 
+                        IsChecked="{Binding SentenceMembers, 
+                                            ElementName=window, 
+                                            Converter={StaticResource SentenceMembersToBool}, 
+                                            ConverterParameter={x:Static local:SentenceMembers.Circumstance}}"/>
                 </StackPanel>
             </Expander>
 

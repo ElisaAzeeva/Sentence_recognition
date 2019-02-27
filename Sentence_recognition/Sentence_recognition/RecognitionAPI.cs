@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 
@@ -19,15 +15,21 @@ namespace Sentence_recognition
 
     // Члены предложения.
     // Переименуйте по желанию 
+
+    [Flags]
     public enum SentenceMembers
     {
-        Subject,
-        Predicate,
-        Definition,
-        Application,
-        Addition,
-        Circumstance,
+        Subject     = 0x000001,
+        Predicate   = 0x000010,
+        Definition  = 0x000100,
+        Application = 0x001000,
+        Addition    = 0x010000,
+        Circumstance= 0x100000,
     }
+
+    // Не уверен что здесь лучшее место чтобы написать это.
+    public class SentenceMembersValueConverter : TEnumValueConverter<SentenceMembers> { }
+
 
     // Здесь все понятно.
     public class Token
@@ -99,19 +101,20 @@ namespace Sentence_recognition
         // Тут соответствие обозначений и типов членов предложения.
         // И оно некорректно. 
         // TODO: Поправить.
+        // Это можно протестировать unit тестами
         // Ещё возможно этот кусок кода лучше (а может и нет) перенести в MyTextDecorations.cs 
         public static TextDecorationCollection GetDecorationFromType(SentenceMembers type)
         {
             switch (type)
             {
                 case SentenceMembers.Subject:
-                    return MyTextDecorations.DashDotedUnderline;
-                case SentenceMembers.Predicate:
                     return MyTextDecorations.Underline;
+                case SentenceMembers.Predicate:
+                    return MyTextDecorations.DoubleUnderline;
                 case SentenceMembers.Definition:
                     return MyTextDecorations.WavyUnderline;
                 case SentenceMembers.Circumstance:
-                    return MyTextDecorations.DoubleUnderline;
+                    return MyTextDecorations.DashDotedUnderline;
                 case SentenceMembers.Application:
                 case SentenceMembers.Addition:
                     return MyTextDecorations.DashedUnderline;
@@ -122,11 +125,15 @@ namespace Sentence_recognition
 
         // Возможно этот кусок кода лучше (а может и нет) перенести куда-то.
         // Возможно в какой либо вспомогательный класс.
-        public static IEnumerable<Run> GetRuns(Data data)
+        // Это можно протестировать unit тестами.
+        public static IEnumerable<Run> GetRuns(Data data, SentenceMembers sm)
         {
             int curent = 0;
             foreach (var t in data.List)
             {
+                if (!sm.HasFlag(t.Type))
+                    continue;
+
                 yield return new Run(data.Text.Substring(curent, t.Start - curent));
                 yield return new Run(data.Text.Substring(t.Start, t.Length))
                 {
