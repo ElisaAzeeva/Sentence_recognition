@@ -79,12 +79,6 @@
                                             Converter={StaticResource SentenceMembersToBool}, 
                                             ConverterParameter={x:Static local:SentenceMembers.Definition}}"/>
                     <CheckBox 
-                        Content="Приложение" 
-                        IsChecked="{Binding SentenceMembers, 
-                                            ElementName=window, 
-                                            Converter={StaticResource SentenceMembersToBool}, 
-                                            ConverterParameter={x:Static local:SentenceMembers.Application}}"/>
-                    <CheckBox 
                         Content="Дополнение" 
                         IsChecked="{Binding SentenceMembers, 
                                             ElementName=window, 

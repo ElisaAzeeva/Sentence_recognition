@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 
@@ -33,16 +34,19 @@ namespace Sentence_recognition
     // Здесь все понятно.
     public class Token
     {
-        public int Start { get; }
+        public int Sentence { get; }
+        public int Offset { get; }
         public int Length { get; }
         public SentenceMembers Type { get; set; }
 
-        public Token(int start, int length, SentenceMembers type)
+        public Token(int sentence, int start, int length, SentenceMembers type)
         {
             Contract.Requires(length > 0);
-            Contract.Requires(Start >= 0);
+            Contract.Requires(Sentence >= 0);
+            Contract.Requires(Offset >= 0);
 
-            Start = start;
+            Sentence = sentence;
+            Offset = start;
             Length = length;
             Type = type;
         }
@@ -51,43 +55,30 @@ namespace Sentence_recognition
     // Не знаю насколько удачная структура. Время покажет. 
     public class Statistics
     {
-        public string Word { get; }
         public SentenceMembers Type { get; }
-        public int Count { get; }
-        public List<(int offset, string sentence)> Cases { get; }
-
-        public Statistics(string word, SentenceMembers type, int count, List<(int offset, string sentence)> cases)
-        {
-            Word = word;
-            Type = type;
-            Count = count;
-            Cases = cases;
-        }
+        public List<(string sentence, int offset)> Cases { get; }
+        public int Length { get; }
     }
 
     // Данные которые я хочу
     public class Data
     {
-        public string Text { get; }
+        public List<string> Sentenses { get; }
 
         // READ ME READ ME READ ME READ ME
         // !!!
         // Должно быть отсортировано по полю Start.
         // Start + Length Должна быть меньше чем Start следующего токена.
         // Ни в одном из токенов не должно быть '\r\n' или любых других переносов строк.
-        // Эти требования (теоретически) отраженны в Contract.Assume 
         // !!!
         public List<Token> Tokens { get; }
 
         public List<Statistics> Statistics { get; }
 
-        public Data(string text, List<Token> list)
+        public Data(List<string> sentenses, List<Token> tokens)
         {
-            // Эти контракты слишком "тяжеловесные" для понимания.
-            // Contract.ForAll(list.Take(list.Count() - 1).Select((t, i) => (t, i)), e => e.t.Start + e.t.Length );
-
-            Text = text;
-            Tokens = list;
+            Sentenses = sentenses;
+            Tokens = tokens;
         }
     }
 
@@ -101,13 +92,16 @@ namespace Sentence_recognition
             // (Или вообще какому нибудь левому файлу)
 
             // Тестовая реализация
-            var data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/ "\r\ntest test testаа test\r\ntest test test test\r\n",
+            var data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/
+                new List<string> {
+                    "\r\ntest test testаа test\r\ntest test test test\r\n"
+                },
                 new List<Token>{
-                    new Token(2,4,SentenceMembers.Subject),
-                    new Token(7,4,SentenceMembers.Predicate),
-                    new Token(12,6,SentenceMembers.Definition),
-                    new Token(19,4,SentenceMembers.Circumstance),
-                    new Token(25,4,SentenceMembers.Addition),
+                    new Token(0, 2, 4, SentenceMembers.Subject),
+                    new Token(0, 7, 4, SentenceMembers.Predicate),
+                    new Token(0, 12, 6, SentenceMembers.Definition),
+                    new Token(0, 19, 4, SentenceMembers.Circumstance),
+                    new Token(0, 25, 4, SentenceMembers.Addition),
                 });
 
             return (0, data);
@@ -128,7 +122,6 @@ namespace Sentence_recognition
                     return MyTextDecorations.WavyUnderline;
                 case SentenceMembers.Circumstance:
                     return MyTextDecorations.DashDotedUnderline;
-                case SentenceMembers.Application:
                 case SentenceMembers.Addition:
                     return MyTextDecorations.DashedUnderline;
                 default:
@@ -136,25 +129,35 @@ namespace Sentence_recognition
             }
         }
 
+        public static string GetText(Data data)
+        {
+            return data.Sentenses.Aggregate("", (s1,s2) => s1 + s2);
+        }
+
         // Возможно этот кусок кода лучше (а может и нет) перенести куда-то.
         // Возможно в какой либо вспомогательный класс.
         // Это можно протестировать unit тестами.
+        // TODO: Это фактически для одного предложения. (Поле Sentence не учитывается)
+        // Нам нужна функция которая преобразует предложения в строки.
+        // 
         public static IEnumerable<Run> GetRuns(Data data, SentenceMembers sm)
         {
             int curent = 0;
+            string text = GetText(data);
+
             foreach (var t in data.Tokens)
             {
                 if (!sm.HasFlag(t.Type))
                     continue;
 
-                yield return new Run(data.Text.Substring(curent, t.Start - curent));
-                yield return new Run(data.Text.Substring(t.Start, t.Length))
+                yield return new Run(text.Substring(curent, t.Offset - curent));
+                yield return new Run(text.Substring(t.Offset, t.Length))
                 {
                     TextDecorations = GetDecorationFromType(t.Type)
                 };
-                curent = t.Start + t.Length;
+                curent = t.Offset + t.Length;
             }
-            yield return new Run(data.Text.Substring(curent));
+            yield return new Run(text.Substring(curent));
         }
     }
 }
