@@ -98,9 +98,17 @@
                 Margin="5" Content="Открыть"
                 Command="Open"/>
 
+            <ProgressBar 
+                x:Name="Progress"
+                Margin="5"
+                Value="0" 
+                Minimum="0" 
+                Maximum="1" 
+                DockPanel.Dock="Bottom" 
+                Height="25"/>
+
             <!-- Это рамка нужна для автоматического расположения кнопки внизу -->
             <Border />
         </DockPanel>
-
     </Grid>
 </Window>

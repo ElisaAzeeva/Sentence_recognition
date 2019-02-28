@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -52,12 +53,16 @@ namespace Sentence_recognition
             recognazer = new RecognitionAPI();
         }
 
-        private void Open(object sender, ExecutedRoutedEventArgs e)
+        private async void Open(object sender, ExecutedRoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                (_, data) = recognazer.GetData(openFileDialog.FileName);
+
+                var progress = new Progress<double>(p => window.Dispatcher.Invoke(() => Progress.Value = p));
+
+                (_, data) = await Task.Run(() => recognazer.GetData(openFileDialog.FileName, progress));
+
                 UpdateText();
             }
         }

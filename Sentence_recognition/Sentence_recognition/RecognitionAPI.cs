@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 
@@ -84,12 +86,21 @@ namespace Sentence_recognition
 
     public class RecognitionAPI
     {
-        public (ErrorCode e, Data d) GetData(string path)
+
+        // Прогресс от 0 до 1
+        public async Task<(ErrorCode e, Data d)> GetData(string path, IProgress<double> progress)
         {
             // Путь должен проверяться на этой стороне.
             // Это может быть путь к текстовому, docx или иному 
             // другому файлу который используется программой.
             // (Или вообще какому нибудь левому файлу)
+
+
+            for (double t = 0; t < 1; t+= 0.01)
+            {
+                Thread.Sleep(100);
+                progress?.Report(t);
+            }
 
             // Тестовая реализация
             var data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/
