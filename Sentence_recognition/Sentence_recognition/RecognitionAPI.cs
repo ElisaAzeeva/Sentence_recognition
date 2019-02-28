@@ -19,12 +19,11 @@ namespace Sentence_recognition
     [Flags]
     public enum SentenceMembers
     {
-        Subject     = 0x000001,
-        Predicate   = 0x000010,
-        Definition  = 0x000100,
-        Application = 0x001000,
-        Addition    = 0x010000,
-        Circumstance= 0x100000,
+        Subject     = 0b000001,
+        Predicate   = 0b000010,
+        Definition  = 0b000100,
+        Addition    = 0b010000,
+        Circumstance= 0b100000,
     }
 
     // Не уверен что здесь лучшее место чтобы написать это.
@@ -49,6 +48,23 @@ namespace Sentence_recognition
         }
     }
 
+    // Не знаю насколько удачная структура. Время покажет. 
+    public class Statistics
+    {
+        public string Word { get; }
+        public SentenceMembers Type { get; }
+        public int Count { get; }
+        public List<(int offset, string sentence)> Cases { get; }
+
+        public Statistics(string word, SentenceMembers type, int count, List<(int offset, string sentence)> cases)
+        {
+            Word = word;
+            Type = type;
+            Count = count;
+            Cases = cases;
+        }
+    }
+
     // Данные которые я хочу
     public class Data
     {
@@ -61,9 +77,9 @@ namespace Sentence_recognition
         // Ни в одном из токенов не должно быть '\r\n' или любых других переносов строк.
         // Эти требования (теоретически) отраженны в Contract.Assume 
         // !!!
-        public List<Token> List { get; }
+        public List<Token> Tokens { get; }
 
-        // Здесь будет ещё одна структура отвечающая за статистику.
+        public List<Statistics> Statistics { get; }
 
         public Data(string text, List<Token> list)
         {
@@ -71,7 +87,7 @@ namespace Sentence_recognition
             // Contract.ForAll(list.Take(list.Count() - 1).Select((t, i) => (t, i)), e => e.t.Start + e.t.Length );
 
             Text = text;
-            List = list;
+            Tokens = list;
         }
     }
 
@@ -83,7 +99,6 @@ namespace Sentence_recognition
             // Это может быть путь к текстовому, docx или иному 
             // другому файлу который используется программой.
             // (Или вообще какому нибудь левому файлу)
-
 
             // Тестовая реализация
             var data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/ "\r\ntest test testаа test\r\ntest test test test\r\n",
@@ -99,8 +114,6 @@ namespace Sentence_recognition
         }
 
         // Тут соответствие обозначений и типов членов предложения.
-        // И оно некорректно. 
-        // TODO: Поправить.
         // Это можно протестировать unit тестами
         // Ещё возможно этот кусок кода лучше (а может и нет) перенести в MyTextDecorations.cs 
         public static TextDecorationCollection GetDecorationFromType(SentenceMembers type)
@@ -129,7 +142,7 @@ namespace Sentence_recognition
         public static IEnumerable<Run> GetRuns(Data data, SentenceMembers sm)
         {
             int curent = 0;
-            foreach (var t in data.List)
+            foreach (var t in data.Tokens)
             {
                 if (!sm.HasFlag(t.Type))
                     continue;

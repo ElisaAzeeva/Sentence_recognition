@@ -32,7 +32,7 @@ namespace Sentence_recognition
         // Using a DependencyProperty as the backing store for SentenceMembers.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SentenceMembersProperty =
             DependencyProperty.Register("SentenceMembers", typeof(SentenceMembers), 
-                typeof(MainWindow), new FrameworkPropertyMetadata((SentenceMembers)0x111111, 
+                typeof(MainWindow), new FrameworkPropertyMetadata((SentenceMembers)0b111111, 
                     new PropertyChangedCallback(SentenceMembersUpdated)) );
 
         private static void SentenceMembersUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -64,6 +64,7 @@ namespace Sentence_recognition
 
         void UpdateText()
         {
+            if (data == null) return;
             block.Inlines.Clear();
             block.Inlines.AddRange(RecognitionAPI.GetRuns(data, SentenceMembers));
         }

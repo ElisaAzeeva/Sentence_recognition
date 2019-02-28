@@ -29,8 +29,8 @@
             Visibility="{Binding IsTextMode, ElementName=window, Converter={StaticResource BoolToVisibility}}">
             <!--Debug only -->
             <Border 
-                BorderBrush="Green" 
-                BorderThickness="1">
+                BorderBrush="Transparent" 
+                BorderThickness="0">
             <!-- 15 - good -->
             <TextBlock 
                 x:Name="block" 
@@ -41,13 +41,20 @@
         </Border>
 
         <Border 
-            Background="Khaki"
             Visibility="{Binding IsTextMode, ElementName=window, Converter={StaticResource InverseBoolToVisibility}}">
-
+            <ListView BorderThickness="0" BorderBrush="Transparent">
+                
+            </ListView>
         </Border>
 
 
         <DockPanel Grid.Column="1">
+            <Expander 
+                DockPanel.Dock="Top" 
+                Header="Статистика"
+                IsExpanded="{Binding IsTextMode, ElementName=window, Converter={StaticResource Inverse}}" />
+
+
             <Expander 
                 DockPanel.Dock="Top" 
                 Header="Текст"
@@ -90,13 +97,6 @@
                                             Converter={StaticResource SentenceMembersToBool}, 
                                             ConverterParameter={x:Static local:SentenceMembers.Circumstance}}"/>
                 </StackPanel>
-            </Expander>
-
-            <Expander 
-                DockPanel.Dock="Top" 
-                Header="Статистика"
-                IsExpanded="{Binding IsTextMode, ElementName=window, Converter={StaticResource Inverse}}">
-                <Rectangle Fill="DarkKhaki" Height="100" />
             </Expander>
 
             <Button 
