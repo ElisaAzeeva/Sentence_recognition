@@ -7,9 +7,14 @@ namespace System.Windows
 {
     public static class MyTextDecorations
     {
+        // TODO: Добавить константу цвета.
+        // TODO: Исправить ошибки с отображением волнистой и
+        // двойного подчеркивания при изменении шрифта.
 
         static MyTextDecorations()
         {
+            // Black magic.
+
             {
                 // Init Underline
                 Underline = new TextDecorationCollection

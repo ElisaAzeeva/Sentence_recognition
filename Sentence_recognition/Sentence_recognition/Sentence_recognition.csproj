@@ -57,10 +57,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="InverseBooleanConverter.cs" />
-    <Compile Include="InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="RecognitionAPI.cs" />
-    <Compile Include="TEnumValueConverter.cs" />
+    <Compile Include="Converters\TEnumValueConverter.cs" />
+    <Compile Include="Converters\SentenceMembersValueConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
