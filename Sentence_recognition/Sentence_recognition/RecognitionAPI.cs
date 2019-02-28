@@ -29,9 +29,6 @@ namespace Sentence_recognition
         Circumstance= 0b100000,
     }
 
-    // Не уверен что здесь лучшее место чтобы написать это.
-    public class SentenceMembersValueConverter : TEnumValueConverter<SentenceMembers> { }
-
 
     // Здесь все понятно.
     public class Token
