@@ -50,7 +50,7 @@ namespace Sentence_recognition
             //Добавление слов на букву А
             List<word> letter_a = new List<word>();
             letter_a.AddRange(new List<word> {
-                                 new word("А", "частица", true, false),
+                                 new word("А", "", true, false), //для лучшего поиска
                                  new word("а", "союз", false, false),
                                  new word("а вдобавок", "союз", false, false),
                                  new word("а именно", "союз", false, false),
@@ -60,7 +60,7 @@ namespace Sentence_recognition
             //Добавление слов на букву Б
             List<word> letter_b = new List<word>();
             letter_b.AddRange(new List<word> {
-                                 new word("Б", "", true, false),
+                                 new word("Б", "", true, false), //для лучшего поиска
                                  new word("благодаря тому что", "союз", false, false),
                                  new word("благо", "союз", false, false),
                                  new word("буде", "союз", false, false),
@@ -70,8 +70,41 @@ namespace Sentence_recognition
                                  new word("благодаря", "предлог", false, false),
                                  new word("бы", "частица", false, false),
                                });
+            //Добавление слов на букву В
+            List<word> letter_v = new List<word>();
+            letter_b.AddRange(new List<word> {
+                                 new word("В", "", true, false), //для лучшего поиска
+                                 new word("в", "предлог", false, false),
+                                 new word("весь", "местоимение", false, true),
+                                 new word("вы", "местоимение", false, false),
+                                 new word("вот", "местоимение", false, false),
+                                 new word("всегда", "местоимение", false, false),
+                                 new word("ваш", "местоимение", false, true),
+                                 new word("всего", "местоимение", false, false),
+                                 new word("вон", "местоимение", false, false),
+                                 new word("всюду", "местоимение", false, false),
+                                 new word("вон", "местоимение", false, false),
+                                 new word("вдобавок", "союз", false, false),
+                                 new word("в результате чего", "союз", false, false),
+                                 new word("в результате того что", "союз", false, false),
+                                 new word("в связи с тем что", "союз", false, false),
+                                 new word("в силу того что", "союз", false, false),
+                                 new word("в случае если", "союз", false, false),
+                                 new word("в то время как", "союз", false, false),
+                                 new word("в том случае если", "союз", false, false),
+                                 new word("в силу чего", "союз", false, false),
+                                 new word("ввиду того что", "союз", false, false),
+                                 new word("вопреки тому что", "союз", false, false),
+                                 new word("вроде того как", "союз", false, false),
+                                 new word("вследствие чего", "союз", false, false),
+                                 new word("вследствие того что", "союз", false, false),
+                                 new word("вовсе не", "частица", false, false),
+                                 new word("ведь", "частица", false, false),
+                                 new word("всё-таки", "частица", false, false),
+                                 new word("вряд ли", "частица", false, false),
+                               });
 
-            first_letter.AddRange(new List<List<word>>{letter_a, letter_b});
+            first_letter.AddRange(new List<List<word>>{letter_a, letter_b, letter_v});
         }
     }
 }
