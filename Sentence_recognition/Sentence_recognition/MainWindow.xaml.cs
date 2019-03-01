@@ -83,7 +83,6 @@ namespace Sentence_recognition
                                  new word("всего", "местоимение", false, false),
                                  new word("вон", "местоимение", false, false),
                                  new word("всюду", "местоимение", false, false),
-                                 new word("вон", "местоимение", false, false),
                                  new word("вдобавок", "союз", false, false),
                                  new word("в результате чего", "союз", false, false),
                                  new word("в результате того что", "союз", false, false),
@@ -103,8 +102,27 @@ namespace Sentence_recognition
                                  new word("всё-таки", "частица", false, false),
                                  new word("вряд ли", "частица", false, false),
                                });
+            //Добавление слов на букву Д
+            List<word> letter_d = new List<word>();
+            letter_b.AddRange(new List<word> {
+                                 new word("Д", "", true, false), //для лучшего поиска
+                                 new word("другой", "местоимение", false, true),
+                                 new word("доселе", "местоимение", false, false),
+                                 new word("да вдобавок", "союз", false, false),
+                                 new word("да еще", "союз", false, false),
+                                 new word("да", "союз", false, false),
+                                 new word("да и", "союз", false, false),
+                                 new word("да и то", "союз", false, false),
+                                 new word("дабы", "союз", false, false),
+                                 new word("даже", "союз", false, false),
+                                 new word("даром что", "союз", false, false),
+                                 new word("для того чтобы", "союз", false, false),
+                                 new word("до", "предлог", false, false),
+                                 new word("далеко не", "частица", false, false),
+                                 new word("даже", "частица", false, false),
+                               });
 
-            first_letter.AddRange(new List<List<word>>{letter_a, letter_b, letter_v});
+            first_letter.AddRange(new List<List<word>>{letter_a, letter_b, letter_v, letter_d });
         }
     }
 }
