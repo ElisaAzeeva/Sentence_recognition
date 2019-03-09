@@ -4,92 +4,121 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sentence_recognition"
+        xmlns:converters="clr-namespace:CommonLib.Converters;assembly=CommonLib"
+        xmlns:lib="clr-namespace:CommonLib;assembly=CommonLib..NETFramework,Version=v4.6.1"
+        xmlns:commonLib="clr-namespace:CommonLib;assembly=CommonLib"
         mc:Ignorable="d"
         Title="MainWindow" 
         Height="600" 
         Width="900"
-        x:Name="window">
+        x:Name="Window">
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="Open"/>
     </Window.CommandBindings>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
-        <local:InverseBooleanConverter x:Key="Inverse" />
-        <local:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility" />
-        <local:SentenceMembersValueConverter x:Key="SentenceMembersToBool"/>
+        <converters:InverseBooleanConverter x:Key="Inverse" />
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility" />
+        <converters:SentenceMembersValueConverter x:Key="SentenceMembersToBool"/>
+        <converters:SentenceMembersToTextDecorationCollectionConverter x:Key="SentenceMembersToTextDecorationCollection"/>
+        <converters:CasesToStringMultiValueConverter x:Key="CasesToString" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
+
         <Border
             Padding="47,3,30,3"
-            Visibility="{Binding IsTextMode, ElementName=window, Converter={StaticResource BoolToVisibility}}">
-            <!--Debug only -->
-            <Border 
-                BorderBrush="Transparent" 
-                BorderThickness="0">
+            Visibility="{Binding IsTextMode, ElementName=Window, Converter={StaticResource BoolToVisibility}}">
             <!-- 15 - good -->
             <TextBlock 
                 x:Name="block" 
                 FontSize="15" 
                 TextWrapping="Wrap"
                 />
-            </Border>
         </Border>
 
         <Border 
-            Visibility="{Binding IsTextMode, ElementName=window, Converter={StaticResource InverseBoolToVisibility}}">
-            <ListView BorderThickness="0" BorderBrush="Transparent">
-                
-            </ListView>
+            Visibility="{Binding IsTextMode, ElementName=Window, Converter={StaticResource InverseBoolToVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <ListView 
+                    x:Name="WordList"
+                    >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock FontSize="15">
+                                <TextBlock.Inlines>
+                                    <Run>
+                                        <Run.TextDecorations>
+                                            <Binding Path="Type" Converter="{StaticResource SentenceMembersToTextDecorationCollection}"></Binding>
+                                        </Run.TextDecorations>
+                                        <Run.Text>
+                                            <MultiBinding Converter="{StaticResource CasesToString}" Mode="OneWay">
+                                                <Binding Path="Length"></Binding>
+                                                <Binding Path="Cases[0]"></Binding>
+                                                <Binding Path="DataContext" ElementName="Window" ></Binding>
+                                            </MultiBinding>
+                                        </Run.Text>
+                                    </Run>
+                                    <Run></Run>
+                                    <Run Text="{Binding Cases.Count, Mode=OneWay}"></Run>
+                                </TextBlock.Inlines>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <ListBox ItemsSource="{Binding SelectedItem.Cases, ElementName=WordList}" Grid.Column="1"/>
+            </Grid>
         </Border>
-
 
         <DockPanel Grid.Column="1">
             <Expander 
                 DockPanel.Dock="Top" 
                 Header="Статистика"
-                IsExpanded="{Binding IsTextMode, ElementName=window, Converter={StaticResource Inverse}}" />
+                IsExpanded="{Binding IsTextMode, ElementName=Window, Converter={StaticResource Inverse}}" />
 
 
             <Expander 
                 DockPanel.Dock="Top" 
                 Header="Текст"
-                IsExpanded="{Binding IsTextMode, ElementName=window}">
+                IsExpanded="{Binding IsTextMode, ElementName=Window}">
                 <StackPanel Margin="0,5,0,5">
                     <CheckBox  
                         Content="Подлежащее" 
                         IsChecked="{Binding SentenceMembers, 
-                                            ElementName=window, 
+                                            ElementName=Window, 
                                             Converter={StaticResource SentenceMembersToBool}, 
-                                            ConverterParameter={x:Static local:SentenceMembers.Subject}}"/>
+                                            ConverterParameter={x:Static commonLib:SentenceMembers.Subject}}"/>
                     <CheckBox 
                         Content="Сказуемое" 
                         IsChecked="{Binding SentenceMembers, 
-                                            ElementName=window, 
+                                            ElementName=Window, 
                                             Converter={StaticResource SentenceMembersToBool}, 
-                                            ConverterParameter={x:Static local:SentenceMembers.Predicate}}"/>
+                                            ConverterParameter={x:Static commonLib:SentenceMembers.Predicate}}"/>
                     <CheckBox 
                         Content="Определение" 
                         IsChecked="{Binding SentenceMembers, 
-                                            ElementName=window, 
+                                            ElementName=Window, 
                                             Converter={StaticResource SentenceMembersToBool}, 
-                                            ConverterParameter={x:Static local:SentenceMembers.Definition}}"/>
+                                            ConverterParameter={x:Static commonLib:SentenceMembers.Definition}}"/>
                     <CheckBox 
                         Content="Дополнение" 
                         IsChecked="{Binding SentenceMembers, 
-                                            ElementName=window, 
+                                            ElementName=Window, 
                                             Converter={StaticResource SentenceMembersToBool}, 
-                                            ConverterParameter={x:Static local:SentenceMembers.Addition}}"/>
+                                            ConverterParameter={x:Static commonLib:SentenceMembers.Addition}}"/>
                     <CheckBox 
                         Content="Обстоятельство" 
                         IsChecked="{Binding SentenceMembers, 
-                                            ElementName=window, 
+                                            ElementName=Window, 
                                             Converter={StaticResource SentenceMembersToBool}, 
-                                            ConverterParameter={x:Static local:SentenceMembers.Circumstance}}"/>
+                                            ConverterParameter={x:Static commonLib:SentenceMembers.Circumstance}}"/>
                 </StackPanel>
             </Expander>
 
@@ -110,5 +139,24 @@
             <!-- Это рамка нужна для автоматического расположения кнопки внизу -->
             <Border />
         </DockPanel>
+
+        <Border Grid.ColumnSpan="2" Visibility="{Binding IsFileOpen, Converter={StaticResource InverseBoolToVisibility}, ElementName=Window}">
+            <Border.Background>
+                <SolidColorBrush Color="White" Opacity="0.5"/>
+            </Border.Background>
+            <StackPanel MaxWidth="200" VerticalAlignment="Center">
+                <ProgressBar 
+                Margin="5"
+                Value="{Binding Value, ElementName=Progress}" 
+                Minimum="0" 
+                Maximum="1" 
+                Height="25"/>
+
+                <Button 
+                Margin="5" Content="Открыть"
+                Command="Open"/>
+            </StackPanel>
+        </Border>
+
     </Grid>
 </Window>

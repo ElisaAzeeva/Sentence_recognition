@@ -1,12 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace System.Windows
+namespace CommonLib
 {
     public static class MyTextDecorations
     {
+        // Возможно лучше переписать это как цвета
+        // Т.к. подчеркивания плохо видно.
+        // Также все это не очень хороший код 
+        // который работает только при 15 шрифте.
+
         // TODO: Добавить константу цвета.
         // TODO: Исправить ошибки с отображением волнистой и
         // двойного подчеркивания при изменении шрифта.
@@ -15,8 +21,8 @@ namespace System.Windows
         {
             // Black magic.
 
+            // Init Underline
             {
-                // Init Underline
                 Underline = new TextDecorationCollection
                 {
                     new TextDecoration
@@ -30,13 +36,14 @@ namespace System.Windows
                 Underline.Freeze();
             }
 
+            // Init DoubleUnderline
             {
                 var sp = new StackPanel();
                 sp.Children.Add(new Rectangle { Width = 2, Height = 1, Fill = Brushes.Black });
                 sp.Children.Add(new Rectangle { Width = 2, Height = 4 });
                 sp.Children.Add(new Rectangle { Width = 2, Height = 1, Fill = Brushes.Black });
 
-                // Init DoubleUnderline
+                
                 DoubleUnderline = new TextDecorationCollection
                 {
                     new TextDecoration
@@ -130,7 +137,6 @@ namespace System.Windows
             }
         }
 
-
         public static TextDecorationCollection Underline { get; }
 
         public static TextDecorationCollection DoubleUnderline { get; }
@@ -140,5 +146,25 @@ namespace System.Windows
         public static TextDecorationCollection DashedUnderline { get; }
 
         public static TextDecorationCollection DashDotedUnderline { get; }
+
+        public static TextDecorationCollection GetDecorationFromType(SentenceMembers type)
+        {
+            switch (type)
+            {
+                case SentenceMembers.Subject:
+                    return Underline;
+                case SentenceMembers.Predicate:
+                    return DoubleUnderline;
+                case SentenceMembers.Definition:
+                    return WavyUnderline;
+                case SentenceMembers.Circumstance:
+                    return DashDotedUnderline;
+                case SentenceMembers.Addition:
+                    return DashedUnderline;
+                default:
+                    return null;
+            }
+        }
+
     }
 }

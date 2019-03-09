@@ -1,4 +1,4 @@
-﻿namespace Sentence_recognition
+﻿namespace CommonLib.Converters
 {
     public class SentenceMembersValueConverter : TEnumValueConverter<SentenceMembers> { }
 }

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Sentence_recognition
+namespace CommonLib.Converters
 {
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class InverseBooleanToVisibilityConverter : IValueConverter
@@ -24,4 +24,5 @@ namespace Sentence_recognition
             return !(value is Visibility && (Visibility)value == Visibility.Visible);
         }
     }
+
 }

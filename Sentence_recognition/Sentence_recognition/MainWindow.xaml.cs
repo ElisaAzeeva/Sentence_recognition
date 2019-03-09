@@ -3,15 +3,21 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using CommonLib;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Sentence_recognition
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         #region Properties
+
+        #region IsTextModeProperty
+
 
         public bool IsTextMode
         {
@@ -23,6 +29,10 @@ namespace Sentence_recognition
         public static readonly DependencyProperty IsTextModeProperty =
             DependencyProperty.Register("IsTextMode", typeof(bool), 
                 typeof(MainWindow), new PropertyMetadata(true));
+
+        #endregion
+
+        #region SentenceMembersProperty
 
         public SentenceMembers SentenceMembers
         {
@@ -44,8 +54,31 @@ namespace Sentence_recognition
 
         #endregion
 
+        #region IsFileOpenProperty
+
+        public bool IsFileOpen
+        {
+            get { return (bool)GetValue(IsFileOpenProperty); }
+            set { SetValue(IsFileOpenProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsFileOpen.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsFileOpenProperty =
+            DependencyProperty.Register("IsFileOpen", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
+
+        #endregion
+
+        #endregion
+
         private RecognitionAPI recognazer;
         private Data data;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public MainWindow()
         {
@@ -58,10 +91,27 @@ namespace Sentence_recognition
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
+                IsFileOpen = false;
 
-                var progress = new Progress<double>(p => window.Dispatcher.Invoke(() => Progress.Value = p));
+                data = null;
+                block.Inlines.Clear();
+                WordList.ItemsSource = null;
+                WordList.Items.Clear();
+                Window.DataContext = null;
+               //OnPropertyChanged(nameof(DataContext));
+                //WordList.GetBindingExpression(DataContextProperty)?.UpdateTarget();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.WaitForFullGCComplete();
+
+
+                var progress = new Progress<double>(p => Window.Dispatcher.Invoke(() => Progress.Value = p));
 
                 (_, data) = await Task.Run(() => recognazer.GetData(openFileDialog.FileName, progress));
+
+                // TODO Error check
+
+                IsFileOpen = true;
 
                 UpdateText();
             }
@@ -70,8 +120,10 @@ namespace Sentence_recognition
         void UpdateText()
         {
             if (data == null) return;
-            block.Inlines.Clear();
             block.Inlines.AddRange(RecognitionAPI.GetRuns(data, SentenceMembers));
+            Window.DataContext = data;
+            WordList.ItemsSource = data.Statistics;
+            //WordList.GetBindingExpression(DataContextProperty)?.UpdateTarget();
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Sentence_recognition
+namespace CommonLib.Converters
 {
     public class TEnumValueConverter<T> : IValueConverter
         where T : struct, IConvertible
