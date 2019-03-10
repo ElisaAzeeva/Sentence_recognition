@@ -74,8 +74,9 @@ namespace Sentence_recognition
                 Console.WriteLine("Russian language is missing in lexicon.");
                 return;
             }
-            IntPtr hPack11 = GrammarEngine.sol_SyntaxAnalysis(hEngine, "Из молодежи, не считая старшей дочери графини, которая была четырьмя годами старше сестры и держала себя уже как большая и гостьи-барышни, в гостиной остались Николай и Соня-племянница.", 0, 0, (60000 | (20 << 22)), GrammarEngineAPI.RUSSIAN_LANGUAGE);
+            IntPtr hPack11 = GrammarEngine.sol_SyntaxAnalysis(hEngine, "Красная чайка села на дерево и улетела домой ", 0, 0, (60000 | (20 << 22)), GrammarEngineAPI.RUSSIAN_LANGUAGE);
             string[] fffa;
+            int[] fffffa;
             int fffff = GrammarEngine.sol_CountGrafs(hPack11);
             int nroot = GrammarEngine.sol_CountRoots(hPack11, 0);
             //  IntPtr hRoot = GrammarEngine.sol_GetRoot(hPack11, 0, iroot);
@@ -88,22 +89,37 @@ namespace Sentence_recognition
                 IntPtr hRoot = GrammarEngine.sol_GetRoot(hPack11, 0, iroot);
                 string fff = GrammarEngine.sol_GetNodeContentsFX(hRoot);
                 int broot = GrammarEngine.sol_CountLeafs(hRoot);
+
+        
+                fffffa = new int[1000];
                 fffa = new string[1000];
+
                 for (int Leaf = 0; Leaf < broot; Leaf++)
                 {
+                     fffffa[Leaf] = GrammarEngine.sol_GetLeafLinkType(hRoot, Leaf);
                     IntPtr rf = GrammarEngine.sol_GetLeaf(hRoot, Leaf);
+
                     int broofft = GrammarEngine.sol_CountLeafs(rf);
                     if (broofft > 1)
                     {
-                       
                         for (int Leaff = 0; Leaff < broofft; Leaff++)
                         {
                             IntPtr frf = GrammarEngine.sol_GetLeaf(rf, Leaff);
                             fffa[Leaff] = GrammarEngine.sol_GetNodeContentsFX(frf);
                         }
                     }
+
                         fffa[Leaf] = GrammarEngine.sol_GetNodeContentsFX(rf);
-                    
+                    for (int Leaff = 0; Leaff < broofft; Leaff++)
+                    {
+                        int fdf = GrammarEngine.sol_GetLeafLinkType(rf, 0);
+                        IntPtr frf = GrammarEngine.sol_GetLeaf(rf, Leaff);
+                        int brfffft = GrammarEngine.sol_CountLeafs(frf);
+                        fffa[Leaf+ broofft] = GrammarEngine.sol_GetNodeContentsFX(frf);
+                        IntPtr frfb = GrammarEngine.sol_GetLeaf(frf, 0);
+                        string fsass= GrammarEngine.sol_GetNodeContentsFX(frfb);
+                        int fdccf = GrammarEngine.sol_GetLeafLinkType(frf, 0);
+                    }
                 }
                 GrammarEngine.sol_DeleteResPack(hPack11);
 
