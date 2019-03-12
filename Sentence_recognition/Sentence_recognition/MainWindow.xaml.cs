@@ -44,6 +44,7 @@ namespace Sentence_recognition
         List<int> sv9Iz = new List<int>();
         List<string> slova = new List<string>();
         List<int> SOS = new List<int>();
+        List<string> SOSI = new List<string>();
         IntPtr hEngine;
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
@@ -53,7 +54,7 @@ namespace Sentence_recognition
             List<string> split2 = new List<string>();
             split1 = ll.divide_text("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница. Соня была тоненькая, миниатюрненькая брюнетка с мягким, отененным длинными ресницами взглядом, густою черною косою, два раза обвивавшею ее голову, и желтоватым оттенком кожи на лице и в особенности на обнаженных худощавых, но грациозных мускулистых руках и шее. Плавностью движений, мягкостью и гибкостью маленьких членов и несколько хитрою и сдержанною манерой она напоминала красивого, но еще не сформировавшегося котенка, который будет прелестною кошечкой. Она, видимо, считала приличным выказывать улыбкой участие к общему разговору; но против воли ее глаза из-под длинных густых ресниц смотрели на уезжающего в армию cousin с таким девическим страстным обожанием, что улыбка ее не могла ни на мгновение обмануть никого, и видно было, что кошечка присела только для того, чтоб еще энергичнее прыгнуть и заиграть с своим cousin, как скоро только они так же, как Борис с Наташей, выберутся из этой гостиной.");
             split2 = ll.divide_sent(split1[nomer], nomer);
-             hEngine = GrammarEngine.sol_CreateGrammarEngineW(@"C:\bin-windows/dictionary.xml");
+             hEngine = GrammarEngine.sol_CreateGrammarEngineW(@"F:\RussianGrammaticalDictionary\bin-windows/dictionary.xml");
             if (hEngine == IntPtr.Zero)
             {
                 Console.WriteLine("Could not load the dictionary");
@@ -94,8 +95,9 @@ namespace Sentence_recognition
                 int broot = GrammarEngine.sol_CountLeafs(hRoot);
              
                         Razbor(hRoot);
-                    
-                
+                Preobraz(SOS);
+
+
                 GrammarEngine.sol_DeleteResPack(hPack11);
 
             }
@@ -116,6 +118,35 @@ namespace Sentence_recognition
                 {
                     Razbor(frf);//Рекурсия
                 }
+            }
+        }
+
+        private void Preobraz (List <int> b)
+        {
+            for (int i = 0; i < b.Count(); i++)
+            {
+                if (b[i] == (int)ChastiRechi.Glagol)
+                {
+                    SOSI.Add("Глагол");
+                    i++;
+                }
+                if (b[i] == (int)ChastiRechi.Narech)
+                {
+                    SOSI.Add("Наречие");
+                    i++;
+                }
+                if (b[i] == (int)ChastiRechi.Prilag)
+                {
+                    SOSI.Add("Прилагательное");
+                    i++;
+                }
+                if (b[i] == (int)ChastiRechi.Such)
+                {
+                    SOSI.Add("Существительное");
+                    i++;
+                }
+
+                SOSI.Add("Хуита какая-то");
             }
         }
     }
