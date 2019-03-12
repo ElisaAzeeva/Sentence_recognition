@@ -46,15 +46,15 @@ namespace Sentence_recognition
         List<int> SOS = new List<int>();
         List<string> SOSI = new List<string>();
         IntPtr hEngine;
+        Divide_Class ll = new Divide_Class();
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            Divide_Class ll = new Divide_Class();
             int nomer = 0;
             List<string> split1 = new List<string>();
             List<string> split2 = new List<string>();
             split1 = ll.divide_text("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница. Соня была тоненькая, миниатюрненькая брюнетка с мягким, отененным длинными ресницами взглядом, густою черною косою, два раза обвивавшею ее голову, и желтоватым оттенком кожи на лице и в особенности на обнаженных худощавых, но грациозных мускулистых руках и шее. Плавностью движений, мягкостью и гибкостью маленьких членов и несколько хитрою и сдержанною манерой она напоминала красивого, но еще не сформировавшегося котенка, который будет прелестною кошечкой. Она, видимо, считала приличным выказывать улыбкой участие к общему разговору; но против воли ее глаза из-под длинных густых ресниц смотрели на уезжающего в армию cousin с таким девическим страстным обожанием, что улыбка ее не могла ни на мгновение обмануть никого, и видно было, что кошечка присела только для того, чтоб еще энергичнее прыгнуть и заиграть с своим cousin, как скоро только они так же, как Борис с Наташей, выберутся из этой гостиной.");
-            split2 = ll.divide_sent(split1[nomer], nomer);
-             hEngine = GrammarEngine.sol_CreateGrammarEngineW(@"F:\RussianGrammaticalDictionary\bin-windows/dictionary.xml");
+            split2 = ll.divide_sent("Краивая чайка кушает, спит", 1);
+             hEngine = GrammarEngine.sol_CreateGrammarEngineW(@"C:\bin-windows/dictionary.xml");
             if (hEngine == IntPtr.Zero)
             {
                 Console.WriteLine("Could not load the dictionary");
@@ -79,7 +79,7 @@ namespace Sentence_recognition
                 Console.WriteLine("Russian language is missing in lexicon.");
                 return;
             }
-            IntPtr hPack11 = GrammarEngine.sol_SyntaxAnalysis(hEngine, "Красивая чайка села на дерево и улетела ", GrammarEngine.MorphologyFlags.SOL_GREN_ALLOW_FUZZY, 0, (60000 | (20 << 22)), GrammarEngineAPI.RUSSIAN_LANGUAGE);
+            IntPtr hPack11 = GrammarEngine.sol_SyntaxAnalysis(hEngine, "Краивая чайка кушает, спит", GrammarEngine.MorphologyFlags.SOL_GREN_ALLOW_FUZZY, 0, (60000 | (20 << 22)), GrammarEngineAPI.RUSSIAN_LANGUAGE);
             //IntPtr hPack1 = GrammarEngine.sol_MorphologyAnalysis(hEngine, "Красивая чайка села на дерево и улетела", GrammarEngine.MorphologyFlags.SOL_GREN_ALLOW_FUZZY, 0, (60000 | (20 << 22)), GrammarEngineAPI.RUSSIAN_LANGUAGE);
             int fffff = GrammarEngine.sol_CountGrafs(hPack11);
             int nroot = GrammarEngine.sol_CountRoots(hPack11, 0);
@@ -96,7 +96,7 @@ namespace Sentence_recognition
              
                         Razbor(hRoot);
                 Preobraz(SOS);
-
+                Sopostavlenie();
 
                 GrammarEngine.sol_DeleteResPack(hPack11);
 
@@ -125,28 +125,77 @@ namespace Sentence_recognition
         {
             for (int i = 0; i < b.Count(); i++)
             {
-                if (b[i] == (int)ChastiRechi.Glagol)
+                switch(b[i])
                 {
-                    SOSI.Add("Глагол");
-                    i++;
+                    case (int)ChastiRechi.Glagol:
+                    {
+                        SOSI.Add("Глагол");
+                        break;
+                    }
+                    case (int)ChastiRechi.Narech:
+                    {
+                        SOSI.Add("Наречие");
+                        break;
+                    }
+                    case (int)ChastiRechi.Prilag:
+                    {
+                        SOSI.Add("Прилагательное");
+                        break;
+                    }
+                    case (int)ChastiRechi.Such:
+                    {
+                        SOSI.Add("Существительное");
+                        break;
+                    }
+                    case (int)ChastiRechi.Mestoim:
+                    {
+                        SOSI.Add("Местоимение");
+                        break;
+                    }
+                    case (int)ChastiRechi.Mestoim_such:
+                    {
+                        SOSI.Add("Местоимение_обман");
+                        break;
+                    }
+                    default:
+                    {
+                        SOSI.Add("Хуита какая-то");
+                        break;
+                    }
                 }
-                if (b[i] == (int)ChastiRechi.Narech)
+            }
+        }
+        private void Sopostavlenie()
+        {
+            int y = default(int);
+            foreach (string ag in slova)
+            {
+                for (int i = 0; i < ll.chast.Count(); i++)
                 {
-                    SOSI.Add("Наречие");
-                    i++;
-                }
-                if (b[i] == (int)ChastiRechi.Prilag)
-                {
-                    SOSI.Add("Прилагательное");
-                    i++;
-                }
-                if (b[i] == (int)ChastiRechi.Such)
-                {
-                    SOSI.Add("Существительное");
-                    i++;
-                }
+                    if (ag == ll.chast[i].text) //Ищем нужное нам слово
+                    {
+                        chast_rechi example=new chast_rechi();
+                        switch (sv9Iz[y])
+                        {
+                            case 4://Подлежащее
+                            {
+                                example = ll.chast[i];
+                                example.ch_sent = SentenceMembers.Subject;
+                                ll.chast[i]=example;
+                                break;
+                            }
+                            case 0://Дополнение
+                            {
+                                example = ll.chast[i];
+                                example.ch_sent = SentenceMembers.Addition;
+                                ll.chast[i] = example;
+                                break;
+                            }
+                        }
 
-                SOSI.Add("Хуита какая-то");
+                    }
+                }
+                y++;
             }
         }
     }

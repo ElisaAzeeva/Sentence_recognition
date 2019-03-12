@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sentence_recognition
 {
-    struct chast_rechi
+    public struct chast_rechi
     {
         //ДЛЯ АЛЕКСЕЯ
         public int nomer_sent;//Номер предложение
@@ -31,25 +31,28 @@ namespace Sentence_recognition
         Glagol = 12,
         Narech = 20,
         Prilag = 9,
-       
+        Mestoim=8,
+        Mestoim_such=7,
     }
     class Divide_Class
     {
         chast_rechi chast_v1 = new chast_rechi();
-        List <chast_rechi> chast = new List <chast_rechi>();
+        public List <chast_rechi> chast = new List <chast_rechi>();
         public List<string> divide_sent(string words,int nomer_senten)
         {
+           
             int dlina = 0;// Считаем длину слова
             string str = default(string);
             int y = 1;//Для номера слова в предложении
+            words += '\0';//!!!!!!!!ALARM!!!!!!!! ОБНАРУЖЕН КОСТЫЛЬ
             int strl = words.Length;
+
             for(int i=0;i<strl;i++)
             {
                 if (words[i] != '(')
                 {
-                    str += words[i];
                     if((dlina != 0))//Чтобы не учитывать (,),( ), (;) и т.д.
-                    if ((words[i] == ' ') || (words[i] == ',') || (words[i] == ';') || (words[i] == ':') || (words[i] == ')') || (words[i] == '\t'))
+                    if ((words[i] == ' ') || (words[i] == ',') || (words[i] == ';') || (words[i] == ':') || (words[i] == ')') || (words[i] == '\t') || (words[i] == '\0'))
                     {
                         chast_v1.nomer_sent = nomer_senten;
                         chast_v1.Offset = i - dlina;
@@ -58,10 +61,17 @@ namespace Sentence_recognition
                         chast.Add(chast_v1);
                         dlina = 0;
                         y++;
+                        str = default(string);
                     }
-                  
+                    
                     if ((words[i] != ' ') && (words[i] != ',') && (words[i] != ';') && (words[i] != ':') && (words[i] != ')') && (words[i] != '\t'))
-                        dlina++;
+                    {
+                        if (i != strl - 1)
+                        {
+                            str += words[i];
+                            dlina++;
+                        }
+                    }
                 }
             }
             List<string> split1 = new List<string>();
@@ -90,18 +100,6 @@ namespace Sentence_recognition
 
             }
             return split1;
-        }
-        public List <chast_rechi> Raspoznavanie(List<string> divide)
-        {
-            foreach(string divi in divide)
-            {
-                foreach(string divis in divide)
-                for (int i=divi.Length;i>0;i++)
-                    {
-
-                    }
-            }
-            return chast;
         }
     }
 }
