@@ -33,6 +33,7 @@ namespace Sentence_recognition
         Prilag = 9,
         Mestoim=8,
         Mestoim_such=7,
+        Pritag = 27,
     }
     class Divide_Class
     {
