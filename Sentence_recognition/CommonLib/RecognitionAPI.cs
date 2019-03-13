@@ -32,20 +32,18 @@ namespace CommonLib
             data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/
                 new List<string> {
                     "\r\ntest test\r\n testаа test",
-                  //  "\r\ntest test test test\r\n"
+                    "\r\n2 block. 2 block. 2 block. 2 block. 2 block. 2 block. 2 block.\r\n"
                 },
                 new List<Token>{
                     new Token(0, 2, 4, SentenceMembers.Subject),
                     new Token(0, 7, 4, SentenceMembers.Predicate),
                     new Token(0, 14, 6, SentenceMembers.Definition),
-                    //new Token(1, 3, 4, SentenceMembers.Circumstance),
-                    //new Token(1, 9, 4, SentenceMembers.Addition),
+                    new Token(1, 3, 4, SentenceMembers.Circumstance),
+                    new Token(1, 9, 4, SentenceMembers.Addition),
                 });
 
             return (0, data);
         }
-
-     
 
         public static string GetText(Data data)
         {
@@ -63,19 +61,34 @@ namespace CommonLib
             int curent = 0;
             string text = GetText(data);
 
+            int currentSentence = 0;
+            int offset = 0;
+
             foreach (var t in data.Tokens)
             {
                 if (!sm.HasFlag(t.Type))
                     continue;
 
-                yield return new Run(text.Substring(curent, t.Offset - curent));
-                yield return new Run(text.Substring(t.Offset, t.Length))
+                if (t.Sentence!=currentSentence)
+                {
+                    var sum = 0;
+                    for (int i = currentSentence; i < t.Sentence; i++)
+                        sum += data.Sentenses[i].Length;
+                    currentSentence = t.Sentence;
+                    offset += sum;
+                    //curent = 0;
+                }
+
+                yield return new Run(text.Substring(curent, offset + t.Offset - curent));
+
+                yield return new Run(text.Substring(offset + t.Offset, t.Length))
                 {
                     TextDecorations = MyTextDecorations.GetDecorationFromType(t.Type)
                 };
+
                 curent = t.Offset + t.Length;
             }
-            yield return new Run(text.Substring(curent));
+            yield return new Run(text.Substring(offset + curent));
         }
     }
 }

@@ -98,8 +98,7 @@ namespace Sentence_recognition
                 WordList.ItemsSource = null;
                 WordList.Items.Clear();
                 Window.DataContext = null;
-               //OnPropertyChanged(nameof(DataContext));
-                //WordList.GetBindingExpression(DataContextProperty)?.UpdateTarget();
+
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.WaitForFullGCComplete();
@@ -120,10 +119,10 @@ namespace Sentence_recognition
         void UpdateText()
         {
             if (data == null) return;
+            block.Inlines.Clear();
             block.Inlines.AddRange(RecognitionAPI.GetRuns(data, SentenceMembers));
             Window.DataContext = data;
             WordList.ItemsSource = data.Statistics;
-            //WordList.GetBindingExpression(DataContextProperty)?.UpdateTarget();
         }
     }
 }

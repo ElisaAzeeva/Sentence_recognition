@@ -73,7 +73,62 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <ListBox ItemsSource="{Binding SelectedItem.Cases, ElementName=WordList}" Grid.Column="1"/>
+                <ListView ItemsSource="{Binding SelectedItem.Cases, ElementName=WordList}" Grid.Column="1">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock FontSize="15">
+                                <Run>
+                                    <Run.Text>
+                                        <MultiBinding 
+                                            Converter="{StaticResource CasesToString}"
+                                            Mode="OneWay" 
+                                            ConverterParameter="0">
+                                                <Binding 
+                                                    Path="SelectedItem.Length" 
+                                                    ElementName="WordList" />
+                                                <Binding />
+                                                <Binding 
+                                                    Path="DataContext" 
+                                                    ElementName="Window" />
+                                        </MultiBinding>
+                                    </Run.Text>
+                                </Run>
+                                <Run Background="CadetBlue">
+                                    <Run.Text>
+                                        <MultiBinding 
+                                            Converter="{StaticResource CasesToString}"
+                                            Mode="OneWay" 
+                                            ConverterParameter="1">
+                                                <Binding 
+                                                    Path="SelectedItem.Length" 
+                                                    ElementName="WordList" />
+                                                <Binding />
+                                                <Binding 
+                                                    Path="DataContext" 
+                                                    ElementName="Window" />
+                                        </MultiBinding>
+                                    </Run.Text>
+                                </Run>
+                                <Run >
+                                    <Run.Text>
+                                        <MultiBinding 
+                                            Converter="{StaticResource CasesToString}"
+                                            Mode="OneWay" 
+                                            ConverterParameter="2">
+                                                <Binding 
+                                                    Path="SelectedItem.Length" 
+                                                    ElementName="WordList" />
+                                                <Binding />
+                                                <Binding 
+                                                    Path="DataContext" 
+                                                    ElementName="Window" />
+                                        </MultiBinding>
+                                    </Run.Text>
+                                </Run>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
         </Border>
 

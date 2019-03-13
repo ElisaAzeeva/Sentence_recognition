@@ -14,7 +14,21 @@ namespace CommonLib.Converters
             var (sentence, offset) = ((int,int))values[1];
             var data = values[2] as Data;
 
-            return data.Sentenses[sentence].Substring(offset, length);
+            if (parameter == null)
+                return data.Sentenses[sentence].Substring(offset, length);
+
+            var p = int.Parse((string)parameter);
+
+            switch (p)
+            {
+                case 0:
+                    return data.Sentenses[sentence].Substring(0, offset);
+                default:
+                case 1:
+                    return data.Sentenses[sentence].Substring(offset, length);
+                case 2:
+                    return data.Sentenses[sentence].Substring(offset + length);
+            }
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -22,4 +36,6 @@ namespace CommonLib.Converters
             throw new NotImplementedException();
         }
     }
+
+
 }
