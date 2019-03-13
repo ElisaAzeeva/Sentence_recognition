@@ -111,9 +111,9 @@ namespace Sentence_recognition
             }
             return split1;
         }
-        private void Slovar()
+        public void Slovar()
         {
-            hEngine = GrammarEngine.sol_CreateGrammarEngineW(@"F:\RussianGrammaticalDictionary\bin-windows/dictionary.xml");
+            hEngine = GrammarEngine.sol_CreateGrammarEngineW(@"C:\bin-windows/dictionary.xml");
             if (hEngine == IntPtr.Zero)
             {
                 Console.WriteLine("Could not load the dictionary");
@@ -141,7 +141,7 @@ namespace Sentence_recognition
         }
         public List<List<chast_rechi>> RaZborText(string text)
         {
-            Slovar();
+            //Slovar();
             List<List<chast_rechi>> ok = new List<List<chast_rechi>>();
             List<string> split = divide_text(text);
             int i = 0;
