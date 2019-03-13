@@ -12,10 +12,10 @@ namespace Sentence_recognition
     public struct chast_rechi
     {
         //ДЛЯ АЛЕКСЕЯ
-        public int nomer_sent;//Номер предложение
+        public int number_sent;//Номер предложение
         public int Offset;//Номер первой буквы слова
         public int Lenght;//Длина слова
-        public SentenceMembers ch_sent;//Член предложения
+        public SentenceMembers mb_sent;//Член предложения
         public string text;//Слово
     }
     //Взято у Алексея нужно будет в последствии убарть
@@ -28,32 +28,33 @@ namespace Sentence_recognition
         Circumstance = 0b100000,
     }
     
-    public enum ChastiRechi
+    public enum TypeOfWord
     {
-        Such = 6,
-        Glagol = 12,
-        Narech = 20,
-        Prilag = 9,
-        Mestoim=8,
-        Mestoim_such=7,
+        Noun = 6,
+        Verb = 12,
+        Adverb = 20,
+        Adjective = 9,
+        Pronoun=8,
+        Pronoun_such=7,
         Pritag = 27,
     }
 
     class Divide_Class
     {
+        const String dictionaryPath = @"C:\Users\Eliza\Documents\GitHub\Sentence_recognition\Sentence_recognition\Sentence_recognition\bin\Debug\bin-windows\dictionary.xml";
         IntPtr hEngine;//указатель на движок разбора
         chast_rechi chast_v1 = new chast_rechi();
         string fff;//Корень
-        List<int> sv9Iz = new List<int>();//Связи
-        List<string> slova = new List<string>();//Слова
-        List<int> SOS = new List<int>();//Коды частей речи
-        List<string> SOSI = new List<string>();//Части речи
-        private List<string> divide_sent(string words,int nomer_senten,ref List<chast_rechi> chast)
+        List<int> links = new List<int>();//Связи
+        List<string> words = new List<string>();//Слова
+        List<int> codeTypeOfWord = new List<int>();//Коды частей речи
+        List<string> typeOfWord = new List<string>();//Части речи
+        private List<string> divide_sent(string words,int number_senten,ref List<chast_rechi> chast)
         {
            
-            int dlina = 0;// Считаем длину слова
+            int length = 0;// Считаем длину слова
             string str = default(string);
-            int y = 1;//Для номера слова в предложении
+            int wordPos = 1;//Для номера слова в предложении
             words += '\0';//!!!!!!!!ALARM!!!!!!!! ОБНАРУЖЕН КОСТЫЛЬ
             int strl = words.Length;
 
@@ -61,16 +62,16 @@ namespace Sentence_recognition
             {
                 if (words[i] != '(')
                 {
-                    if((dlina != 0))//Чтобы не учитывать (,),( ), (;) и т.д.
+                    if((length != 0))//Чтобы не учитывать (,),( ), (;) и т.д.
                     if ((words[i] == ' ') || (words[i] == ',') || (words[i] == ';') || (words[i] == ':') || (words[i] == ')') || (words[i] == '\t') || (words[i] == '\0')||(words[i] == '-'))
                     {
-                        chast_v1.nomer_sent = nomer_senten;
-                        chast_v1.Offset = i - dlina;
-                        chast_v1.Lenght = dlina;
+                        chast_v1.number_sent = number_senten;
+                        chast_v1.Offset = i - length;
+                        chast_v1.Lenght = length;
                         chast_v1.text = str;
                         chast.Add(chast_v1);
-                        dlina = 0;
-                        y++;
+                        length = 0;
+                        wordPos++;
                         str = default(string);
                     }
                     
@@ -79,7 +80,7 @@ namespace Sentence_recognition
                         if (i != strl - 1)
                         {
                             str += words[i];
-                            dlina++;
+                            length++;
                         }
                     }
                 }
@@ -111,9 +112,10 @@ namespace Sentence_recognition
             }
             return split1;
         }
-        public void Slovar()
+        public void Dictionary()
         {
-            hEngine = GrammarEngine.sol_CreateGrammarEngineW(@"C:\bin-windows/dictionary.xml");
+            //TODO: path is const!!!
+            hEngine = GrammarEngine.sol_CreateGrammarEngineW(dictionaryPath);
             if (hEngine == IntPtr.Zero)
             {
                 Console.WriteLine("Could not load the dictionary");
@@ -139,187 +141,185 @@ namespace Sentence_recognition
                 return;
             }
         }
-        public List<List<chast_rechi>> RaZborText(string text)
+        public List<List<chast_rechi>> ParsingText(string text)
         {
-            //Slovar();
+            //Dictionary();
             List<List<chast_rechi>> ok = new List<List<chast_rechi>>();
             List<string> split = divide_text(text);
             int i = 0;
 
             foreach (string s in split)
             {
-              ok.Add( Razbor_FULL(s, i++));
-               
-                Debug.WriteLine("FFFFFFFFFFF");
+              ok.Add( Parsing_FULL(s, i++));
             }
             return ok;
         }
-        public List<chast_rechi> Razbor_FULL(string Sent,int nomer_senten)
+        public List<chast_rechi> Parsing_FULL(string Sent,int number_senten)
         {
               List<chast_rechi> chast = new List<chast_rechi>();
-             divide_sent(Sent, nomer_senten, ref chast);
+             divide_sent(Sent, number_senten, ref chast);
             IntPtr hPack11 = GrammarEngine.sol_SyntaxAnalysis(hEngine, Sent, GrammarEngine.MorphologyFlags.SOL_GREN_ALLOW_FUZZY, 0, (60000 | (20 << 22)), GrammarEngineAPI.RUSSIAN_LANGUAGE);
             int nroot = GrammarEngine.sol_CountRoots(hPack11, 0);
-            sv9Iz.Clear();
-            slova.Clear();
-            SOS.Clear();
-            SOSI.Clear();
+            links.Clear();
+            words.Clear();
+            codeTypeOfWord.Clear();
+            typeOfWord.Clear();
            
             for (int iroot = 1; iroot < nroot - 1; ++iroot)
             {
                 IntPtr hRoot = GrammarEngine.sol_GetRoot(hPack11, 0, iroot);
                 fff = GrammarEngine.sol_GetNodeContentsFX(hRoot);
                 int broot = GrammarEngine.sol_CountLeafs(hRoot);
-                Razbor(hRoot);
-                Preobraz(SOS);
-                Sopostavlenie(ref chast);
+                Parsing(hRoot);
+                Transform(codeTypeOfWord);
+                Corelate(ref chast);
                 GrammarEngine.sol_DeleteResPack(hPack11);
             }
 
             return chast;
 
         }
-        private void Razbor(IntPtr rf)
+        private void Parsing(IntPtr rf)
         {
-            int broofft = GrammarEngine.sol_CountLeafs(rf);// Количество листьев
-            for (int Leaff = 0; Leaff < broofft; Leaff++)
+            int leafsCount = GrammarEngine.sol_CountLeafs(rf);// Количество листьев
+            for (int Leaff = 0; Leaff < leafsCount; Leaff++)
             {
                 //НЕЕЕЕЕ ЛЕЕЕЕЗЬЬЬЬ 
-                IntPtr frf = GrammarEngine.sol_GetLeaf(rf, Leaff);//Указатель на текущий лист
-                int afafaf = GrammarEngine.sol_GetNodeIEntry(hEngine, frf);//Первичный ключ словарной статьи(для определения части речи)
-                SOS.Add(GrammarEngine.sol_GetEntryClass(hEngine, afafaf));// id части речи
-                slova.Add(GrammarEngine.sol_GetNodeContentsFX(frf)); //Слова
-                sv9Iz.Add(GrammarEngine.sol_GetLeafLinkType(rf, Leaff));//Связи листа и его корня (предыдущего листа)
-                int broofftt = GrammarEngine.sol_CountLeafs(frf);//Количество листьев у текущего листа
-                if (broofftt > 0)
+                IntPtr pLeaf = GrammarEngine.sol_GetLeaf(rf, Leaff);//Указатель на текущий лист
+                int prKey = GrammarEngine.sol_GetNodeIEntry(hEngine, pLeaf);//Первичный ключ словарной статьи(для определения части речи)
+                codeTypeOfWord.Add(GrammarEngine.sol_GetEntryClass(hEngine, prKey));// id части речи
+                words.Add(GrammarEngine.sol_GetNodeContentsFX(pLeaf)); //Слова
+                links.Add(GrammarEngine.sol_GetLeafLinkType(rf, Leaff));//Связи листа и его корня (предыдущего листа)
+                int curLeafsCount = GrammarEngine.sol_CountLeafs(pLeaf);//Количество листьев у текущего листа
+                if (curLeafsCount > 0)
                 {
-                    Razbor(frf);//Рекурсия
+                    Parsing(pLeaf);//Рекурсия
                 }
             }
         }
 
-        private void Preobraz(List<int> b)
+        private void Transform(List<int> b)
         {
             for (int i = 0; i < b.Count(); i++)
             {
                 switch (b[i])
                 {
-                    case (int)ChastiRechi.Glagol:
+                    case (int)TypeOfWord.Verb:
                     {
-                        SOSI.Add("Глагол");
+                        typeOfWord.Add("Глагол");
                         break;
                     }
-                    case (int)ChastiRechi.Narech:
+                    case (int)TypeOfWord.Adverb:
                     {
-                        SOSI.Add("Наречие");
+                        typeOfWord.Add("Наречие");
                         break;
                     }
-                    case (int)ChastiRechi.Prilag:
+                    case (int)TypeOfWord.Adjective:
                     {
-                        SOSI.Add("Прилагательное");
+                        typeOfWord.Add("Прилагательное");
                         break;
                     }
-                    case (int)ChastiRechi.Such:
+                    case (int)TypeOfWord.Noun:
                     {
-                        SOSI.Add("Существительное");
+                        typeOfWord.Add("Существительное");
                         break;
                     }
-                    case (int)ChastiRechi.Mestoim:
+                    case (int)TypeOfWord.Pronoun:
                     {
-                        SOSI.Add("Местоимение");
+                        typeOfWord.Add("Местоимение");
                         break;
                     }
-                    case (int)ChastiRechi.Mestoim_such:
+                    case (int)TypeOfWord.Pronoun_such:
                     {
-                        SOSI.Add("Местоимение_обман");
+                        typeOfWord.Add("Местоимение_обман");
                         break;
                     }
-                    case (int)ChastiRechi.Pritag:
+                    case (int)TypeOfWord.Pritag:
                     {
-                        SOSI.Add("Притяжательная_частица");
+                        typeOfWord.Add("Притяжательная_частица");
                         break;
                     }
                     default:
                     {
-                        SOSI.Add("Хуита какая-то");
+                        typeOfWord.Add("Неопределено");
                         break;
                     }
                 }
             }
         }
 
-        private void Sopostavlenie(ref List<chast_rechi> chast)
+        private void Corelate(ref List<chast_rechi> chast)
         {
             chast_rechi example = new chast_rechi();
-            int y = default(int);
-            foreach (string ag in slova)
+            int y = default(int); //TODO: explain
+            foreach (string ag in words)
             {
                 for (int i = 0; i < chast.Count(); i++)
                 {
                     if (fff == chast[i].text)
                     {
                         example = chast[i];
-                        example.ch_sent = SentenceMembers.Predicate;
+                        example.mb_sent = SentenceMembers.Predicate;
                         chast[i] = example;
                     }
                     if (ag == chast[i].text) //Ищем нужное нам слово
                     {
-                        switch (sv9Iz[y])
+                        switch (links[y])
                         {
                             case 4://Подлежащее
                             {
                                 example = chast[i];
-                                example.ch_sent = SentenceMembers.Subject;
+                                example.mb_sent = SentenceMembers.Subject;
                                 chast[i] = example;
                                 break;
                             }
                             case 0://Дополнение
                             {
                                 example = chast[i];
-                                example.ch_sent = SentenceMembers.Addition;
+                                example.mb_sent = SentenceMembers.Addition;
                                 chast[i] = example;
                                 break;
                             }
                             case 1:
                             {
-                                if (SOSI[y] == "Прилагательное")
+                                if (typeOfWord[y] == "Прилагательное")
                                 {
                                     example = chast[i];
-                                    example.ch_sent = SentenceMembers.Definition;
+                                    example.mb_sent = SentenceMembers.Definition;
                                     chast[i] = example;
                                 }
-                                if (SOSI[y] == "Наречие")
+                                if (typeOfWord[y] == "Наречие")
                                 {
                                     example = chast[i];
-                                    example.ch_sent = SentenceMembers.Circumstance;
+                                    example.mb_sent = SentenceMembers.Circumstance;
                                     chast[i] = example;
                                 }
-                                if (SOSI[y] == "Притяжательная_частица")
+                                if (typeOfWord[y] == "Притяжательная_частица")
                                 {
                                     example = chast[i];
-                                    example.ch_sent = SentenceMembers.Addition;
+                                    example.mb_sent = SentenceMembers.Addition;
                                     chast[i] = example;
                                 }
                                 break;
                             }
                             case 68:
                             {
-                                if ((SOSI[y] == "Местоимение") || (SOSI[y] == "Местоимение_обман") || (SOSI[y] == "Существительное"))
+                                if ((typeOfWord[y] == "Местоимение") || (typeOfWord[y] == "Местоимение_обман") || (typeOfWord[y] == "Существительное"))
                                 {
                                     example = chast[i];
-                                    example.ch_sent = SentenceMembers.Subject;
+                                    example.mb_sent = SentenceMembers.Subject;
                                     chast[i] = example;
                                 }
-                                if (SOSI[y] == "Глагол")
+                                if (typeOfWord[y] == "Глагол")
                                 {
                                     example = chast[i];
-                                    example.ch_sent = SentenceMembers.Predicate;
+                                    example.mb_sent = SentenceMembers.Predicate;
                                     chast[i] = example;
                                 }
-                                if (SOSI[y] == "Прилагательное")
+                                if (typeOfWord[y] == "Прилагательное")
                                 {
                                     example = chast[i];
-                                    example.ch_sent = SentenceMembers.Definition;
+                                    example.mb_sent = SentenceMembers.Definition;
                                     chast[i] = example;
                                 }
                                 break;

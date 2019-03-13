@@ -35,11 +35,12 @@ namespace Sentence_recognition
      
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            int nomer = 0;
+            int number = 0;
             Divide_Class ff = new Divide_Class();
-            ff.Slovar(); //Загружаем словарь
-            List<List<chast_rechi>> w = ff.RaZborText("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница.");
-            List < chast_rechi >  a= ff.Razbor_FULL("Счастливая и озорная улыбка осветила его лицо",1);
+            ff.Dictionary(); //Загружаем словарь
+            List<List<chast_rechi>> w = ff.ParsingText("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница.");
+            List < chast_rechi >  Result = ff.Parsing_FULL("Счастливая и озорная улыбка осветила его лицо",1);
+            number = 2;
         }
   
     }
