@@ -1,13 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28606.126
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentence_recognition", "Sentence_recognition\Sentence_recognition.csproj", "{DAD5CD2C-0C8E-477E-B112-C8DB81E9E077}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLib", "CommonLib\CommonLib.csproj", "{32A19803-1751-4F09-AD29-93B017045691}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibTests", "LibTests\LibTests.csproj", "{5B500793-57F9-4D55-95B1-FC83DDA1B42E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +15,6 @@ Global
 		{DAD5CD2C-0C8E-477E-B112-C8DB81E9E077}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAD5CD2C-0C8E-477E-B112-C8DB81E9E077}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAD5CD2C-0C8E-477E-B112-C8DB81E9E077}.Release|Any CPU.Build.0 = Release|Any CPU
-		{32A19803-1751-4F09-AD29-93B017045691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32A19803-1751-4F09-AD29-93B017045691}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32A19803-1751-4F09-AD29-93B017045691}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32A19803-1751-4F09-AD29-93B017045691}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
