@@ -15,7 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -34,6 +34,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="gren_consts, Version=1.0.5731.30694, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\RussianGrammaticalDictionary\demo\ai\solarix\Grammar_Engine\LexiconFX\bin\debug\gren_consts.dll</HintPath>
+    </Reference>
+    <Reference Include="gren_fx, Version=13.20.5731.30694, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\RussianGrammaticalDictionary\demo\ai\solarix\Grammar_Engine\LexiconFX\bin\debug\gren_fx.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleGREN_FX">
+      <HintPath>..\..\..\GrammarEngine\src\demo\ai\solarix\Grammar_Engine\SimpleGREN_FX\bin\Debug\netcoreapp1.1\SimpleGREN_FX.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -62,6 +73,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Divide_Class.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
