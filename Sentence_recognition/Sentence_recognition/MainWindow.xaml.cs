@@ -6,6 +6,19 @@ using System.Windows.Input;
 using CommonLib;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using SolarixGrammarEngineNET;
+
 
 namespace Sentence_recognition
 {
@@ -36,14 +49,14 @@ namespace Sentence_recognition
 
         public SentenceMembers SentenceMembers
         {
-            get { return (SentenceMembers)GetValue(SentenceMembersProperty); }
+            get { return (CommonLib.SentenceMembers)GetValue(SentenceMembersProperty); }
             set { SetValue(SentenceMembersProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for SentenceMembers.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SentenceMembersProperty =
-            DependencyProperty.Register("SentenceMembers", typeof(SentenceMembers), 
-                typeof(MainWindow), new FrameworkPropertyMetadata((SentenceMembers)0b111111, 
+            DependencyProperty.Register("SentenceMembers", typeof(CommonLib.SentenceMembers), 
+                typeof(MainWindow), new FrameworkPropertyMetadata((CommonLib.SentenceMembers)0b111111, 
                     new PropertyChangedCallback(SentenceMembersUpdated)) );
 
         private static void SentenceMembersUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -84,6 +97,7 @@ namespace Sentence_recognition
         {
             InitializeComponent();
             recognazer = new RecognitionAPI();
+
         }
 
         private async void Open(object sender, ExecutedRoutedEventArgs e)
@@ -107,7 +121,7 @@ namespace Sentence_recognition
                 var progress = new Progress<double>(p => Window.Dispatcher.Invoke(() => Progress.Value = p));
 
                 (_, data) = await Task.Run(() => recognazer.GetData(openFileDialog.FileName, progress));
-
+                Analysis();
                 // TODO Error check
 
                 IsFileOpen = true;
@@ -120,9 +134,19 @@ namespace Sentence_recognition
         {
             if (data == null) return;
             block.Inlines.Clear();
-            block.Inlines.AddRange(RecognitionAPI.GetRuns(data, SentenceMembers));
+            block.Inlines.AddRange(RecognitionAPI.GetRuns(data, (CommonLib.SentenceMembers)SentenceMembers));
             Window.DataContext = data;
             WordList.ItemsSource = data.Statistics;
+        }
+
+        void Analysis()
+        {
+            Divide_Class ff = new Divide_Class();
+            ff.Dictionary(); //Загружаем словарь
+            List<List<chast_rechi>> w = ff.ParsingText("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница.");
+            List<chast_rechi> Result = ff.Parsing_FULL("\r\n Счастливая и озорная улыбка осветила его лицо", 1);
+            data.Tokens = Result.Select(r => r.token).ToList();
+            UpdateText();
         }
     }
 }

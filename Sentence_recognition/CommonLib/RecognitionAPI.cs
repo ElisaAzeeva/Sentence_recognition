@@ -31,15 +31,15 @@ namespace CommonLib
             // Тестовая реализация
             data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/
                 new List<string> {
-                    "\r\ntest test\r\n testаа test",
-                    "\r\n2 block. 2 block. 2 block. 2 block. 2 block. 2 block. 2 block.\r\n"
+                    "\r\n Счастливая и озорная улыбка осветила его лицо",
+                    //"\r\n2 block. 2 block. 2 block. 2 block. 2 block. 2 block. 2 block.\r\n"
                 },
                 new List<Token>{
-                    new Token(0, 2, 4, SentenceMembers.Subject),
-                    new Token(0, 7, 4, SentenceMembers.Predicate),
-                    new Token(0, 14, 6, SentenceMembers.Definition),
-                    new Token(1, 3, 4, SentenceMembers.Circumstance),
-                    new Token(1, 9, 4, SentenceMembers.Addition),
+                    //new Token(0, 2, 4, SentenceMembers.Subject),
+                    //new Token(0, 7, 4, SentenceMembers.Predicate),
+                    //new Token(0, 14, 6, SentenceMembers.Definition),
+                    //new Token(1, 3, 4, SentenceMembers.Circumstance),
+                    //new Token(1, 9, 4, SentenceMembers.Addition),
                 });
 
             return (0, data);
@@ -61,7 +61,7 @@ namespace CommonLib
             int curent = 0;
             string text = GetText(data);
 
-            int currentSentence = 0;
+            int currentSentence = 1;
             int offset = 0;
 
             foreach (var t in data.Tokens)
@@ -80,15 +80,17 @@ namespace CommonLib
                 }
 
                 yield return new Run(text.Substring(curent, offset + t.Offset - curent));
+                //yield return new Run(text.Substring(curent, offset + curent - t.Offset ));
 
                 yield return new Run(text.Substring(offset + t.Offset, t.Length))
                 {
                     TextDecorations = MyTextDecorations.GetDecorationFromType(t.Type)
                 };
 
+                //curent = offset + t.Offset + t.Length;
                 curent = t.Offset + t.Length;
             }
-            yield return new Run(text.Substring(offset + curent));
+            yield return new Run(text.Substring(curent));
         }
     }
 }

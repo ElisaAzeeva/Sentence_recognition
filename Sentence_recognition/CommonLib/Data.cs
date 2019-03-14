@@ -14,7 +14,7 @@ namespace CommonLib
         // Start + Length Должна быть меньше чем Start следующего токена.
         // Ни в одном из токенов не должно быть '\r\n' или любых других переносов строк.
         // !!!
-        public List<Token> Tokens { get; }
+        public List<Token> Tokens { get; set; } // set - Temperaly
 
         public List<Statistics> Statistics { get; }
 

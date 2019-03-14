@@ -5,10 +5,10 @@ namespace CommonLib
     // Здесь все понятно.
     public class Token
     {
-        public int Sentence { get; }
-        public int Offset { get; }
-        public int Length { get; }
-        public SentenceMembers Type { get; }
+        public int Sentence { get; set; }
+        public int Offset { get; set; }
+        public int Length { get; set;}
+        public SentenceMembers Type { get; set; }
 
         public Token(int sentence, int start, int length, SentenceMembers type)
         {
@@ -20,6 +20,10 @@ namespace CommonLib
             Offset = start;
             Length = length;
             Type = type;
+        }
+
+        public Token()
+        {
         }
     }
 }

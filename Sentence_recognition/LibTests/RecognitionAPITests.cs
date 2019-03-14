@@ -64,5 +64,35 @@ namespace LibTests
             CollectionAssert.AreEqual(expected, result);
         }
 
+        [TestMethod]
+        public void GetRunsTest3()
+        {
+            var sentences = new List<string>
+            {
+                "abcd",
+                "abcd",
+                "abcd",
+            };
+
+            var token = new List<Token>
+            {
+                new Token(0,1,1,SentenceMembers.Addition),
+                new Token(1,1,1,SentenceMembers.Addition),
+                new Token(2,1,1,SentenceMembers.Addition)
+
+            };
+
+            var result = RecognitionAPI.GetRuns(new Data(sentences, token), SentenceMembers.Addition)
+                .Select(r => r.Text).ToList();
+
+            List<string> expected = new List<string> {
+                "a", "b", "cda",
+                "a", "b", "cda",
+                "b", "cd",
+            };
+
+            CollectionAssert.AreEqual(expected, result);
+        }
+
     }
 }
