@@ -15,7 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -36,17 +36,21 @@
   <ItemGroup>
     <Reference Include="gren_consts, Version=1.0.5731.30694, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\RussianGrammaticalDictionary\demo\ai\solarix\Grammar_Engine\LexiconFX\bin\debug\gren_consts.dll</HintPath>
+      <HintPath>bin\Debug\gren_consts.dll</HintPath>
     </Reference>
     <Reference Include="gren_fx, Version=13.20.5731.30694, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\RussianGrammaticalDictionary\demo\ai\solarix\Grammar_Engine\LexiconFX\bin\debug\gren_fx.dll</HintPath>
+      <HintPath>bin\Debug\gren_fx.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleGREN_FX">
-      <HintPath>..\..\..\GrammarEngine\src\demo\ai\solarix\Grammar_Engine\SimpleGREN_FX\bin\Debug\netcoreapp1.1\SimpleGREN_FX.dll</HintPath>
+    <Reference Include="SimpleGREN_FX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\SimpleGREN_FX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -97,6 +101,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -104,6 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLib\CommonLib.csproj">
+      <Project>{32a19803-1751-4f09-ad29-93b017045691}</Project>
+      <Name>CommonLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

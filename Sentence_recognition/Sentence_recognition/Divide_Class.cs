@@ -5,27 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 using SolarixGrammarEngineNET;
+using CommonLib;
 
 namespace Sentence_recognition
 {
     public struct chast_rechi
     {
         //ДЛЯ АЛЕКСЕЯ
-        public int number_sent;//Номер предложение
-        public int Offset;//Номер первой буквы слова
-        public int Lenght;//Длина слова
-        public SentenceMembers mb_sent;//Член предложения
+        public Token token;
+        //public int Sentence;//Номер предложение
+        //public int Offset;//Номер первой буквы слова
+        //public int Length;//Длина слова
+        public SentenceMembers Type;//Член предложения
         public string text;//Слово
-    }
-    //Взято у Алексея нужно будет в последствии убарть
-    public enum SentenceMembers
-    {
-        Subject = 0b000001,
-        Predicate = 0b000010,
-        Definition = 0b000100,
-        Addition = 0b010000,
-        Circumstance = 0b100000,
     }
     
     public enum TypeOfWord
@@ -44,7 +38,7 @@ namespace Sentence_recognition
         const String dictionaryPath = @"C:\Users\Eliza\Documents\GitHub\Sentence_recognition\Sentence_recognition\Sentence_recognition\bin\Debug\bin-windows\dictionary.xml";
         IntPtr hEngine;//указатель на движок разбора
         chast_rechi chast_v1 = new chast_rechi();
-        string fff;//Корень
+        string root;//Корень
         List<int> links = new List<int>();//Связи
         List<string> words = new List<string>();//Слова
         List<int> codeTypeOfWord = new List<int>();//Коды частей речи
@@ -65,10 +59,15 @@ namespace Sentence_recognition
                     if((length != 0))//Чтобы не учитывать (,),( ), (;) и т.д.
                     if ((words[i] == ' ') || (words[i] == ',') || (words[i] == ';') || (words[i] == ':') || (words[i] == ')') || (words[i] == '\t') || (words[i] == '\0')||(words[i] == '-'))
                     {
-                        chast_v1.number_sent = number_senten;
-                        chast_v1.Offset = i - length;
-                        chast_v1.Lenght = length;
-                        chast_v1.text = str;
+                            //chast_v1.token(number_senten, i - length, length)
+                            chast_v1.token = new Token();
+                            chast_v1.token.Sentence=number_senten;
+                            chast_v1.token.Offset = i - length;
+                            chast_v1.token.Length = length;
+                            //chast_v1.Sentence = number_senten;
+                            //chast_v1.Offset = i - length;
+                            //chast_v1.Length = length;
+                            chast_v1.text = str;
                         chast.Add(chast_v1);
                         length = 0;
                         wordPos++;
@@ -168,7 +167,7 @@ namespace Sentence_recognition
             for (int iroot = 1; iroot < nroot - 1; ++iroot)
             {
                 IntPtr hRoot = GrammarEngine.sol_GetRoot(hPack11, 0, iroot);
-                fff = GrammarEngine.sol_GetNodeContentsFX(hRoot);
+                root = GrammarEngine.sol_GetNodeContentsFX(hRoot);
                 int broot = GrammarEngine.sol_CountLeafs(hRoot);
                 Parsing(hRoot);
                 Transform(codeTypeOfWord);
@@ -256,10 +255,10 @@ namespace Sentence_recognition
             {
                 for (int i = 0; i < chast.Count(); i++)
                 {
-                    if (fff == chast[i].text)
+                    if (root == chast[i].text)
                     {
                         example = chast[i];
-                        example.mb_sent = SentenceMembers.Predicate;
+                        example.token.Type = SentenceMembers.Predicate;
                         chast[i] = example;
                     }
                     if (ag == chast[i].text) //Ищем нужное нам слово
@@ -269,14 +268,14 @@ namespace Sentence_recognition
                             case 4://Подлежащее
                             {
                                 example = chast[i];
-                                example.mb_sent = SentenceMembers.Subject;
+                                example.token.Type = SentenceMembers.Subject;
                                 chast[i] = example;
                                 break;
                             }
                             case 0://Дополнение
                             {
                                 example = chast[i];
-                                example.mb_sent = SentenceMembers.Addition;
+                                example.token.Type = SentenceMembers.Addition;
                                 chast[i] = example;
                                 break;
                             }
@@ -285,19 +284,19 @@ namespace Sentence_recognition
                                 if (typeOfWord[y] == "Прилагательное")
                                 {
                                     example = chast[i];
-                                    example.mb_sent = SentenceMembers.Definition;
+                                    example.token.Type = SentenceMembers.Definition;
                                     chast[i] = example;
                                 }
                                 if (typeOfWord[y] == "Наречие")
                                 {
                                     example = chast[i];
-                                    example.mb_sent = SentenceMembers.Circumstance;
+                                    example.token.Type = SentenceMembers.Circumstance;
                                     chast[i] = example;
                                 }
                                 if (typeOfWord[y] == "Притяжательная_частица")
                                 {
                                     example = chast[i];
-                                    example.mb_sent = SentenceMembers.Addition;
+                                    example.token.Type = SentenceMembers.Addition;
                                     chast[i] = example;
                                 }
                                 break;
@@ -307,19 +306,19 @@ namespace Sentence_recognition
                                 if ((typeOfWord[y] == "Местоимение") || (typeOfWord[y] == "Местоимение_обман") || (typeOfWord[y] == "Существительное"))
                                 {
                                     example = chast[i];
-                                    example.mb_sent = SentenceMembers.Subject;
+                                    example.token.Type = SentenceMembers.Subject;
                                     chast[i] = example;
                                 }
                                 if (typeOfWord[y] == "Глагол")
                                 {
                                     example = chast[i];
-                                    example.mb_sent = SentenceMembers.Predicate;
+                                    example.token.Type = SentenceMembers.Predicate;
                                     chast[i] = example;
                                 }
                                 if (typeOfWord[y] == "Прилагательное")
                                 {
                                     example = chast[i];
-                                    example.mb_sent = SentenceMembers.Definition;
+                                    example.token.Type = SentenceMembers.Definition;
                                     chast[i] = example;
                                 }
                                 break;
