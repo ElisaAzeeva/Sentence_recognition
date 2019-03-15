@@ -35,7 +35,7 @@ namespace Sentence_recognition
 
     class Divide_Class
     {
-        const String dictionaryPath = @"C:\Users\Eliza\Desktop\Учёба\Sentence_recognition\Sentence_recognition\Sentence_recognition\bin\Debug\bin-windows\dictionary.xml";
+        const String dictionaryPath = @"C:\Users\Eliza\Documents\GitHub\Sentence_recognition\Sentence_recognition\Sentence_recognition\bin\Debug\bin-windows\dictionary.xml";
         IntPtr hEngine;//указатель на движок разбора
         chast_rechi chast_v1 = new chast_rechi();
         string root;//Корень
