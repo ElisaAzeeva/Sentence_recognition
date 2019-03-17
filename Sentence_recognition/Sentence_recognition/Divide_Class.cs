@@ -89,7 +89,6 @@ namespace Sentence_recognition
 
             foreach (string s in split)
             {
-
                 if (s.Trim() != "")
                     split1.Add(s);
 
@@ -98,16 +97,27 @@ namespace Sentence_recognition
         }
         private List<string> divide_text(string words)
         {
-
+            string zapom = default(string);
+            string str = default(string);
+            int strl = words.Length;
             List<string> split1 = new List<string>();
-            string[] split = words.Split(new Char[] { '!', '?', '.' });
-
-            foreach (string s in split)
+            for (int i = 0; i < strl; i++)
             {
-
-                if (s.Trim() != "")
-                    split1.Add(s);
-
+                if (i < strl - 1)
+                {
+                    if ((words[i] == '!') || (words[i] == '?') || (words[i] == '.'))
+                {
+                    if ((words[i + 1] == ' ')&&(Char.IsUpper(words[i + 2]))) //Проверка на сокращения (и т.д.)
+                    {
+                        str += " ";
+                        str += words[i];
+                        split1.Add(str);
+                        str = null;
+                        i++;
+                    }
+                }
+                    str += words[i];
+                }
             }
             return split1;
         }
