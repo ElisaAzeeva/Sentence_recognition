@@ -82,15 +82,14 @@ namespace CommonLib
                 }
 
                 yield return new Run(text.Substring(curent, offset + t.Offset - curent));
-                //yield return new Run(text.Substring(curent, offset + curent - t.Offset ));
 
                 yield return new Run(text.Substring(offset + t.Offset, t.Length))
                 {
                     TextDecorations = MyTextDecorations.GetDecorationFromType(t.Type)
                 };
 
-                //curent = offset + t.Offset + t.Length;
-                curent = t.Offset + t.Length;
+                curent = offset + t.Offset + t.Length;
+                //curent = t.Offset + t.Length;
             }
             yield return new Run(text.Substring(curent));
         }

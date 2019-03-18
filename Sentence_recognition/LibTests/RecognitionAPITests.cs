@@ -87,7 +87,7 @@ namespace LibTests
 
             List<string> expected = new List<string> {
                 "a", "b", "cda",
-                "a", "b", "cda",
+                "b", "cda",
                 "b", "cd",
             };
 
