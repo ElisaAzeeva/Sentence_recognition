@@ -17,7 +17,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SolarixGrammarEngineNET;
 
 
 namespace Sentence_recognition
@@ -121,7 +120,6 @@ namespace Sentence_recognition
                 var progress = new Progress<double>(p => Window.Dispatcher.Invoke(() => Progress.Value = p));
 
                 (_, data) = await Task.Run(() => recognazer.GetData(openFileDialog.FileName, progress));
-                Analysis();
                 // TODO Error check
 
                 IsFileOpen = true;
@@ -139,14 +137,6 @@ namespace Sentence_recognition
             WordList.ItemsSource = data.Statistics;
         }
 
-        void Analysis()
-        {
-            Divide_Class ff = new Divide_Class();
-            ff.Dictionary(); //Загружаем словарь
-            List<List<chast_rechi>> w = ff.ParsingText("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница.");
-            List<chast_rechi> Result = ff.Parsing_FULL("\r\n Счастливая и озорная улыбка осветила его лицо", 1);
-            data.Tokens = Result.Select(r => r.token).ToList();
-            UpdateText();
-        }
+
     }
 }

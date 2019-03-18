@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sentence_recognition;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -28,19 +29,20 @@ namespace CommonLib
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.WaitForFullGCComplete();
+
+            Divide_Class ff = new Divide_Class();
+            ff.Dictionary(); //Загружаем словарь
+            //List<List<chast_rechi>> w = ff.ParsingText("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница.");
+            List<chast_rechi> Result = ff.Parsing_FULL("\r\n Счастливая и озорная улыбка осветила его лицо", 1);
+
             // Тестовая реализация
             data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/
                 new List<string> {
                     "\r\n Счастливая и озорная улыбка осветила его лицо",
                     //"\r\n2 block. 2 block. 2 block. 2 block. 2 block. 2 block. 2 block.\r\n"
                 },
-                new List<Token>{
-                    //new Token(0, 2, 4, SentenceMembers.Subject),
-                    //new Token(0, 7, 4, SentenceMembers.Predicate),
-                    //new Token(0, 14, 6, SentenceMembers.Definition),
-                    //new Token(1, 3, 4, SentenceMembers.Circumstance),
-                    //new Token(1, 9, 4, SentenceMembers.Addition),
-                });
+                Result.Select(r => r.token).ToList()
+                );
 
             return (0, data);
         }
