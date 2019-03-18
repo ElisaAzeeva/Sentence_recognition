@@ -125,9 +125,12 @@ namespace Sentence_recognition
         public List<chast_rechi> Parsing_FULL(string Sent, int number_senten)
         {
             List<chast_rechi> chast = new List<chast_rechi>();
+
             divide_sent(Sent, number_senten, ref chast);
+
             IntPtr hPack11 = GrammarEngine.sol_SyntaxAnalysis(hEngine, Sent, GrammarEngine.MorphologyFlags.SOL_GREN_ALLOW_FUZZY, 0, (60000 | (20 << 22)), GrammarEngineAPI.RUSSIAN_LANGUAGE);
             int nroot = GrammarEngine.sol_CountRoots(hPack11, 0);
+
             links.Clear();
             words.Clear();
             codeTypeOfWord.Clear();
@@ -142,13 +145,13 @@ namespace Sentence_recognition
 
                 typeOfWord = codeTypeOfWord.Select(tof => (TypeOfWord)tof).ToList();
 
-                Corelate(ref chast);
+                Corelate(chast);
                 GrammarEngine.sol_DeleteResPack(hPack11);
             }
 
             return chast;
-
         }
+
         private void Parsing(IntPtr rf)
         {
             int leafsCount = GrammarEngine.sol_CountLeafs(rf);// Количество листьев
@@ -186,15 +189,14 @@ namespace Sentence_recognition
             Pritag = 27,
         }
 
-        private void Corelate(ref List<chast_rechi> chast)
+        private void Corelate(List<chast_rechi> chast)
         {
-            chast_rechi example = new chast_rechi();
             int y = default(int); //TODO: explain
             foreach (string ag in words)
             {
                 for (int i = 0; i < chast.Count(); i++)
                 {
-                    example = chast[i];
+                    chast_rechi example = chast[i];
 
                     if (root == chast[i].text)
                         example.token.Type = SentenceMembers.Predicate;
