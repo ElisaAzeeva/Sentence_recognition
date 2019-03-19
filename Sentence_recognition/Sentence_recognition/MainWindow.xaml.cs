@@ -116,6 +116,14 @@ namespace Sentence_recognition
                 GC.WaitForPendingFinalizers();
                 GC.WaitForFullGCComplete();
 
+                // Фильтр расширений открываемых файлов
+                openFileDialog.Filter = "Файлы Word (*.doc; *.docx)| *.doc; *.docx|Текстовые файлы (*.txt)|*.txt|Все файлы(*.doc; *.docx; *.txt)|*.doc; *.docx; *.txt";
+
+                // Начальная директория при выборе файла
+                openFileDialog.InitialDirectory = @"C:\";
+
+                // Название OpenFileDialog'a
+                openFileDialog.Title = "Выберите файл для чтения";
 
                 var progress = new Progress<double>(p => Window.Dispatcher.Invoke(() => Progress.Value = p));
 

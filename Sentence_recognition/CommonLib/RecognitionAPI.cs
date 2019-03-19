@@ -1,16 +1,20 @@
 ﻿using Sentence_recognition;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows;
+//using System.Windows;
 using System.Windows.Documents;
-
+//using Microsoft.Win32;
+using System.Text;
+//using DocumentFormat.OpenXml.Packaging;
+//using DocumentFormat.OpenXml.Wordprocessing;
 namespace CommonLib
 {
     public class RecognitionAPI
     {
-
+        public string text = Environment.NewLine;
         // Прогресс от 0 до 1
         public (ErrorCode e, Data d) GetData(string path, IProgress<double> progress)
         {
@@ -19,7 +23,46 @@ namespace CommonLib
             // другому файлу который используется программой.
             // (Или вообще какому нибудь левому файлу)
 
-            for (double t = 0; t <= 1; t+= 0.01)
+
+            if (Path.GetExtension(path) == ".txt")
+            {
+                
+                File.AppendAllText(path, text); //encoding?
+            }
+
+            // Если расширение файла .doc или .docx
+            else
+            {
+                //SaveFileDialog SaveFile = new SaveFileDialog();
+
+                // Фильтр расширений сохраняемого файла
+                //SaveFile.Filter = "Текстовый файл (*.txt)|*.txt";
+
+                // Название SaveFileDialog'a
+                //SaveFile.Title = "Выберите файл, куда хотите сохранить конвертированный текст";
+
+                // Проверка на существующий файл с выбранным названием
+                //SaveFile.OverwritePrompt = true;
+
+                //if (SaveFile.ShowDialog() == true)
+                //{
+                    // Очищаем выбранный файл для сохранения
+                    //File.WriteAllText(SaveFile.FileName, string.Empty);
+
+                    // Магия
+                    //WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, true);
+                    //Body body = wordDoc.MainDocumentPart.Document.Body;
+                    //var WordText = body.ChildElements;
+                    //foreach (var child_element in WordText)
+                    //{
+                    //    var FinalText = child_element.InnerText;
+                    //    if (FinalText != "")
+                    //        File.AppendAllText(SaveFile.FileName, FinalText + "\r\n");
+                    //}
+                //}
+            }
+
+            for (double t = 0; t <= 1.01; t+= 0.01)
             {
                 Thread.Sleep(10);
                 progress?.Report(t);
@@ -33,6 +76,9 @@ namespace CommonLib
             Divide_Class ff = new Divide_Class();
             ff.Dictionary(); //Загружаем словарь
             //List<List<chast_rechi>> w = ff.ParsingText("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница.");
+            List<List<chast_rechi>> w = ff.ParsingText(text);
+            //List<chast_rechi> result = ff.Parsing_FULL(, 0);
+
             List<chast_rechi> Result = ff.Parsing_FULL("\r\n Счастливая и озорная улыбка осветила его лицо", 0);
 
             // Тестовая реализация
