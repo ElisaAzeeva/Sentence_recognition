@@ -84,7 +84,7 @@ namespace CommonLib
             // Тестовая реализация
             data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/
                 new List<string> {
-                    "\r\n Счастливая и озорная улыбка осветила его лицо",
+                    "\r\n Счастливая и озорная улыбка осветила его лицо .",
                     //"\r\n2 block. 2 block. 2 block. 2 block. 2 block. 2 block. 2 block.\r\n"
                 },
                 Result.Select(r => r.token).ToList()
