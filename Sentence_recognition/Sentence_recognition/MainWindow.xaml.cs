@@ -144,7 +144,5 @@ namespace Sentence_recognition
             Window.DataContext = data;
             WordList.ItemsSource = data.Statistics;
         }
-
-
     }
 }

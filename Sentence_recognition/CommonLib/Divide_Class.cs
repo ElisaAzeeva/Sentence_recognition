@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-
 using SolarixGrammarEngineNET;
 using CommonLib;
 
@@ -18,6 +16,26 @@ namespace Sentence_recognition
         public SentenceMembers Type;//Член предложения
         public string text;//Слово
     }
+
+    /// <summary> Части речи </summary>
+    public enum TypeOfWord
+    {
+        /// <summary> Существительное </summary>
+        Noun = 6,
+        /// <summary> Глагол </summary>
+        Verb = 12,
+        /// <summary> Наречие </summary>
+        Adverb = 20,
+        /// <summary> Прилагательное </summary>
+        Adjective = 9,
+        /// <summary> Местоимение </summary>
+        Pronoun = 8,
+        /// <summary> Местоимение_обман </summary>
+        Pronoun_such = 7,
+        /// <summary> Притяжательная_частица </summary>
+        Pritag = 27,
+    }
+
 
     class Divide_Class
     {
@@ -77,7 +95,29 @@ namespace Sentence_recognition
 
         private List<string> divide_text(string words)
         {
-            return words.Split("!?.".ToCharArray()).Where(s => s.Trim() != "").ToList();
+            string zapom = default(string);
+            string str = default(string);
+            int strl = words.Length;
+            List<string> split1 = new List<string>();
+            for (int i = 0; i < strl; i++)
+            {
+                if (i < strl - 1)
+                {
+                    if ((words[i] == '!') || (words[i] == '?') || (words[i] == '.'))
+                    {
+                        if ((words[i + 1] == ' ') && (Char.IsUpper(words[i + 2]))) //Проверка на сокращения (и т.д.)
+                        {
+                            str += " ";
+                            str += words[i];
+                            split1.Add(str);
+                            str = null;
+                            i++;
+                        }
+                    }
+                    str += words[i];
+                }
+            }
+            return split1;
         }
 
         public void Dictionary()
@@ -170,24 +210,7 @@ namespace Sentence_recognition
                 }
             }
         }
-        /// <summary> Части речи </summary>
-        public enum TypeOfWord
-        {
-            /// <summary> Существительное </summary>
-            Noun = 6,
-            /// <summary> Глагол </summary>
-            Verb = 12,
-            /// <summary> Наречие </summary>
-            Adverb = 20,
-            /// <summary> Прилагательное </summary>
-            Adjective = 9,
-            /// <summary> Местоимение </summary>
-            Pronoun = 8,
-            /// <summary> Местоимение_обман </summary>
-            Pronoun_such = 7,
-            /// <summary> Притяжательная_частица </summary>
-            Pritag = 27,
-        }
+
 
         private void Corelate(List<chast_rechi> chast)
         {
