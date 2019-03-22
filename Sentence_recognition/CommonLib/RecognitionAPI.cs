@@ -27,7 +27,7 @@ namespace CommonLib
             if (Path.GetExtension(path) == ".txt")
             {
                 
-                File.AppendAllText(path, text); //encoding?
+                text = File.ReadAllText(path); //encoding?
             }
 
             // Если расширение файла .doc или .docx
@@ -76,18 +76,16 @@ namespace CommonLib
             Divide_Class ff = new Divide_Class();
             ff.Dictionary(); //Загружаем словарь
             //List<List<chast_rechi>> w = ff.ParsingText("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница.");
-            List<List<chast_rechi>> w = ff.ParsingText(text);
+            List<chast_rechi> w = ff.ParsingText(text).SelectMany(x => x).ToList();
             //List<chast_rechi> result = ff.Parsing_FULL(, 0);
 
-            List<chast_rechi> Result = ff.Parsing_FULL("\r\n Счастливая и озорная улыбка осветила его лицо", 0);
+            //List<chast_rechi> Result = ff.Parsing_FULL("\r\n Счастливая и озорная улыбка осветила его лицо", 0);
 
             // Тестовая реализация
             data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/
-                new List<string> {
-                    "\r\n Счастливая и озорная улыбка осветила его лицо .",
+                    ff.divide_text(text).ToList(),
                     //"\r\n2 block. 2 block. 2 block. 2 block. 2 block. 2 block. 2 block.\r\n"
-                },
-                Result.Select(r => r.token).ToList()
+                w.Select(r => r.token).ToList()
                 );
 
             return (0, data);

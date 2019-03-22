@@ -11,6 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibTests", "LibTests\LibTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialize", "Serialize\Serialize.csproj", "{61AAFE9F-3A74-4397-8471-B141E9A7197D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52C1E933-97E4-4909-8D89-4D7AB74F11D7}"
+	ProjectSection(SolutionItems) = preProject
+		Sentence_recognition\bin\Debug\test_text_1.txt = Sentence_recognition\bin\Debug\test_text_1.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

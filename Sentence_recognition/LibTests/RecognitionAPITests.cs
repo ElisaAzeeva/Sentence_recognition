@@ -94,5 +94,32 @@ namespace LibTests
             CollectionAssert.AreEqual(expected, result);
         }
 
+        [TestMethod]
+        public void GetRunsTest4()
+        {
+            var sentences = new List<string>
+            {
+                " a",
+                " a",
+                " a",
+            };
+
+            var token = new List<Token>
+            {
+                new Token(1,1,1,SentenceMembers.Addition),
+            };
+
+            var result = RecognitionAPI.GetRuns(new Data(sentences, token), SentenceMembers.Addition)
+                .Select(r => r.Text).ToList();
+
+            List<string> expected = new List<string> {
+                " a ",
+                "a",
+                " a"
+            };
+
+            CollectionAssert.AreEqual(expected, result);
+        }
+
     }
 }

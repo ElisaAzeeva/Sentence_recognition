@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SolarixGrammarEngineNET;
 using CommonLib;
+using System.Text.RegularExpressions;
 
 namespace Sentence_recognition
 {
@@ -93,7 +94,7 @@ namespace Sentence_recognition
             return words.Split(" ,:\t();".ToCharArray()).Where(s => s.Trim() != "").ToList();
         }
 
-        private List<string> divide_text(string words)
+        public IEnumerable<string> divide_text(string words)
         {
             string zapom = default(string);
             string str = default(string);
@@ -101,7 +102,7 @@ namespace Sentence_recognition
             List<string> split1 = new List<string>();
             for (int i = 0; i < strl; i++)
             {
-                if (i < strl - 1)
+                if (i < strl - 2)
                 {
                     if ((words[i] == '!') || (words[i] == '?') || (words[i] == '.'))
                     {
@@ -118,6 +119,64 @@ namespace Sentence_recognition
                 }
             }
             return split1;
+
+            // Ну хотя-бы так:
+
+            //string str = "";
+            //List<string> split1 = new List<string>();
+
+            //for (int i = 0; i < words.Length - 2; i++)
+            //{
+            //    if ("!?.".Contains(words[i]))
+            //    {
+            //        if ((words[i + 1] == ' ') && char.IsUpper(words[i + 2])) //Проверка на сокращения (и т.д.)
+            //        {
+            //            split1.Add(str + words[i] + " ");
+            //            str = "";
+            //            i++;
+            //        }
+            //    }
+            //    str += words[i];
+            //}
+            //return split1;
+
+            // А можно так:
+
+            // (?<=a)b (positive lookbehind) matches the b (and only the b) in cab, but does not match bed or debt.
+            //string pattern = "(?<=[.!?])";
+
+            //var split = Regex.Split(words, pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant)
+            //    .ToList();
+
+            // return split;
+
+            // А нам действительно нужно замораживаться с отделением сокращений?
+            // Существует ещё дофигише крайних случаев и рассматривать все мне кажется нам не надо.
+
+            // Ну если очень хочется:
+
+            //using (var enumerator = split.GetEnumerator())
+            //{
+            //    if (!enumerator.MoveNext())
+            //        yield break;
+
+            //    var current = enumerator.Current;
+
+            //    while (enumerator.MoveNext())
+            //    {
+            //        var next = enumerator.Current;
+            //        var check = next.TrimStart();
+
+            //        if (check.Length > 0 && char.IsUpper(check[0]))
+            //        {
+            //            yield return current;
+            //            current = next;
+            //        }
+            //        else
+            //            current += next;
+            //    }
+            //    yield return current;
+            //}
         }
 
         public void Dictionary()
@@ -153,7 +212,7 @@ namespace Sentence_recognition
         {
             //Dictionary();
             List<List<chast_rechi>> ok = new List<List<chast_rechi>>();
-            List<string> split = divide_text(text);
+            List<string> split = divide_text(text).ToList();
             int i = 0;
 
             foreach (string s in split)
