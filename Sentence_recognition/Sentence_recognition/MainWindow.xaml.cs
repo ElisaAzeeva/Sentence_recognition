@@ -95,7 +95,15 @@ namespace Sentence_recognition
 
         private async void Open(object sender, ExecutedRoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                // Фильтр расширений открываемых файлов
+                Filter = "Файлы Word (*.docx)|*.docx|Текстовые файлы (*.txt)|*.txt|Все файлы(*)|*",
+
+                // Название OpenFileDialog'a
+                Title = "Выберите файл для чтения"
+            };
+
             if (openFileDialog.ShowDialog() == true)
             {
                 IsFileOpen = false;
@@ -111,15 +119,6 @@ namespace Sentence_recognition
                 GC.WaitForFullGCComplete();
 
                 OpenButton.IsEnabled = false;
-
-                // Фильтр расширений открываемых файлов
-                openFileDialog.Filter = "Файлы Word (*.doc; *.docx)| *.doc; *.docx|Текстовые файлы (*.txt)|*.txt|Все файлы(*.doc; *.docx; *.txt)|*.doc; *.docx; *.txt";
-
-                // Начальная директория при выборе файла
-                openFileDialog.InitialDirectory = @"C:\";
-
-                // Название OpenFileDialog'a
-                openFileDialog.Title = "Выберите файл для чтения";
 
                 var progress = new Progress<(double p,string s)>(p =>
                                 Window.Dispatcher.Invoke(() => {
