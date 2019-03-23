@@ -26,10 +26,10 @@ namespace CommonLib
             // TODO: DEBUG ONLY
             var sss = new List<Statistics>();
 
-            for (int i = 0; i < 500_00; i++)
+            for (int i = 0; i < 50; i++)
             {
                 var cas = new List<(int,int)>();
-                for (int j = 0; j < 500; j++)
+                for (int j = 0; j < 50; j++)
                 {
                     cas.Add((0, (i+j)%15));
                 }                

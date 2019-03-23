@@ -14,24 +14,33 @@ namespace CommonLib
 {
     public class RecognitionAPI
     {
-        public string text = Environment.NewLine;
+        private Analyser analyser;
+
+        public ErrorCode Init() {
+
+            analyser = new Analyser();
+            ErrorCode error;
+
+            if ((error = analyser.Init()) != ErrorCode.Ok)
+                return error;
+            return ErrorCode.Ok;
+        }
+
         // Прогресс от 0 до 1
-        public (ErrorCode e, Data d) GetData(string path, IProgress<double> progress)
+        public (ErrorCode e, Data d) GetData(string path, IProgress<(double, string)> progress)
         {
+            string text = "";
+
             // Путь должен проверяться на этой стороне.
             // Это может быть путь к текстовому, docx или иному 
             // другому файлу который используется программой.
             // (Или вообще какому нибудь левому файлу)
 
+            progress?.Report((.0, "Загрузка файла."));
 
             if (Path.GetExtension(path) == ".txt")
-            {
-                
                 text = File.ReadAllText(path); //encoding?
-            }
-
-            // Если расширение файла .doc или .docx
-            else
+            else // Если расширение файла .doc или .docx
             {
                 //SaveFileDialog SaveFile = new SaveFileDialog();
 
@@ -62,31 +71,19 @@ namespace CommonLib
                 //}
             }
 
-            for (double t = 0; t <= 1.01; t+= 0.01)
-            {
-                Thread.Sleep(10);
-                progress?.Report(t);
-            }
-
             Data data = null;
+
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.WaitForFullGCComplete();
 
-            Divide_Class ff = new Divide_Class();
-            ff.Dictionary(); //Загружаем словарь
-            //List<List<chast_rechi>> w = ff.ParsingText("Из молодежи, не считая старшей дочери графини (которая была четырьмя годами старше сестры и держала себя уже как большая) и гостьи-барышни, в гостиной остались Николай и Соня-племянница.");
-            List<chast_rechi> w = ff.ParsingText(text).SelectMany(x => x).ToList();
-            //List<chast_rechi> result = ff.Parsing_FULL(, 0);
+            var sentenses = text.DivideText().ToList();
 
-            //List<chast_rechi> Result = ff.Parsing_FULL("\r\n Счастливая и озорная улыбка осветила его лицо", 0);
+            List<Token> w = analyser.ParsingText(sentenses, progress)
+                .SelectMany(x => x)
+                .ToList();
 
-            // Тестовая реализация
-            data = new Data( /*File.ReadAllText("War_and_Peace.txt"),*/
-                    ff.divide_text(text).ToList(),
-                    //"\r\n2 block. 2 block. 2 block. 2 block. 2 block. 2 block. 2 block.\r\n"
-                w.Select(r => r.token).ToList()
-                );
+            data = new Data(sentenses, w);
 
             return (0, data);
         }
@@ -96,12 +93,6 @@ namespace CommonLib
             return data.Sentenses.Aggregate("", (s1,s2) => s1 + s2);
         }
 
-        // Возможно этот кусок кода лучше (а может и нет) перенести куда-то.
-        // Возможно в какой либо вспомогательный класс.
-        // Это можно протестировать unit тестами.
-        // TODO: Это фактически для одного предложения. (Поле Sentence не учитывается)
-        // Нам нужна функция которая преобразует предложения в строки.
-        // 
         public static IEnumerable<Run> GetRuns(Data data, SentenceMembers sm)
         {
             int curent = 0;

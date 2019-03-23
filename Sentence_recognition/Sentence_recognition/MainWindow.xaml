@@ -52,7 +52,7 @@
                     >
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock FontSize="15">
+                            <TextBlock FontSize="20">
                                 <TextBlock.Inlines>
                                     <Run>
                                         <Run.TextDecorations>
@@ -179,8 +179,10 @@
 
             <Button 
                 DockPanel.Dock="Bottom"
-                Margin="5" Content="Открыть"
-                Command="Open"/>
+                Margin="5" 
+                Content="Открыть"
+                Command="Open"
+                x:Name="OpenButton"/>
 
             <ProgressBar 
                 x:Name="Progress"
@@ -189,7 +191,9 @@
                 Minimum="0" 
                 Maximum="1" 
                 DockPanel.Dock="Bottom" 
-                Height="25"/>
+                Height="25" />
+
+            <TextBlock x:Name="ProgressText" DockPanel.Dock="Bottom" />
 
             <!-- Это рамка нужна для автоматического расположения кнопки внизу -->
             <Border />
@@ -207,9 +211,13 @@
                 Maximum="1" 
                 Height="25"/>
 
+                <TextBlock Text="{Binding Text, ElementName=ProgressText}" />
+                
                 <Button 
-                Margin="5" Content="Открыть"
-                Command="Open"/>
+                    Margin="5" 
+                    Content="Открыть"
+                    Command="Open"
+                    IsEnabled="{Binding IsEnabled, ElementName=OpenButton}"/>
             </StackPanel>
         </Border>
 

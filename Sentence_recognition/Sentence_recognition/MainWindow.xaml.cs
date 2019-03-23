@@ -6,18 +6,6 @@ using System.Windows.Input;
 using CommonLib;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
 
 namespace Sentence_recognition
 {
@@ -96,7 +84,13 @@ namespace Sentence_recognition
         {
             InitializeComponent();
             recognazer = new RecognitionAPI();
+            var error = recognazer.Init();
 
+            if (error != ErrorCode.Ok)
+            {
+                MessageBox.Show($"Ошибка: {error.GetEnumDescription()}.");
+                Application.Current.Shutdown();
+            }
         }
 
         private async void Open(object sender, ExecutedRoutedEventArgs e)
@@ -116,6 +110,8 @@ namespace Sentence_recognition
                 GC.WaitForPendingFinalizers();
                 GC.WaitForFullGCComplete();
 
+                OpenButton.IsEnabled = false;
+
                 // Фильтр расширений открываемых файлов
                 openFileDialog.Filter = "Файлы Word (*.doc; *.docx)| *.doc; *.docx|Текстовые файлы (*.txt)|*.txt|Все файлы(*.doc; *.docx; *.txt)|*.doc; *.docx; *.txt";
 
@@ -125,10 +121,23 @@ namespace Sentence_recognition
                 // Название OpenFileDialog'a
                 openFileDialog.Title = "Выберите файл для чтения";
 
-                var progress = new Progress<double>(p => Window.Dispatcher.Invoke(() => Progress.Value = p));
+                var progress = new Progress<(double p,string s)>(p =>
+                                Window.Dispatcher.Invoke(() => {
+                                    Progress.Value = p.p;
+                                    ProgressText.Text = p.s;
+                                }));
 
-                (_, data) = await Task.Run(() => recognazer.GetData(openFileDialog.FileName, progress));
-                // TODO Error check
+                ErrorCode error;
+
+                (error, data) = await Task.Run(() => recognazer.GetData(openFileDialog.FileName, progress));
+
+                OpenButton.IsEnabled = true;
+
+                if (error != ErrorCode.Ok)
+                {
+                    MessageBox.Show($"Ошибка: {error.GetEnumDescription()}.");
+                    return;
+                }
 
                 IsFileOpen = true;
 
@@ -140,7 +149,7 @@ namespace Sentence_recognition
         {
             if (data == null) return;
             block.Inlines.Clear();
-            block.Inlines.AddRange(RecognitionAPI.GetRuns(data, (CommonLib.SentenceMembers)SentenceMembers));
+            block.Inlines.AddRange(RecognitionAPI.GetRuns(data, SentenceMembers));
             Window.DataContext = data;
             WordList.ItemsSource = data.Statistics;
         }
