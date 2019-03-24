@@ -26,6 +26,12 @@ namespace CommonLib
         // Прогресс от 0 до 1
         public (ErrorCode e, Data d) GetData(string path, IProgress<(double, string)> progress)
         {
+            Data data = null;
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.WaitForFullGCComplete();
+
             string text = "";
 
             progress?.Report((.0, "Загрузка файла."));
@@ -51,19 +57,13 @@ namespace CommonLib
                     break;
 
                 case ".analyser":
-                    throw new NotImplementedException("TODO");
-                    break;
+                    data = Data.Open(path);
+                    return (0, data); // TODO errors
 
                 default:
                     return (ErrorCode.UnknownFileType, null);
             }
-
-            Data data = null;
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.WaitForFullGCComplete();
-
+            
             var sentenses = text.DivideText().ToList();
 
             List<Token> w = analyser.ParsingText(sentenses, progress)

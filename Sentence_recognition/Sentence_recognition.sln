@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLib", "CommonLib\Comm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibTests", "LibTests\LibTests.csproj", "{5B500793-57F9-4D55-95B1-FC83DDA1B42E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialize", "Serialize\Serialize.csproj", "{61AAFE9F-3A74-4397-8471-B141E9A7197D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52C1E933-97E4-4909-8D89-4D7AB74F11D7}"
 	ProjectSection(SolutionItems) = preProject
 		Sentence_recognition\bin\Debug\test_text_1.txt = Sentence_recognition\bin\Debug\test_text_1.txt
@@ -34,10 +32,6 @@ Global
 		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61AAFE9F-3A74-4397-8471-B141E9A7197D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61AAFE9F-3A74-4397-8471-B141E9A7197D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61AAFE9F-3A74-4397-8471-B141E9A7197D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61AAFE9F-3A74-4397-8471-B141E9A7197D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

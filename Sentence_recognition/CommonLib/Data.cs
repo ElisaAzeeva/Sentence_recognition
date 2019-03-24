@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CommonLib
 {
-    // Данные которые я хочу
+    [Serializable]
     public class Data
     {
         public List<string> Sentenses { get; }
@@ -28,14 +30,29 @@ namespace CommonLib
 
             for (int i = 0; i < 50; i++)
             {
-                var cas = new List<(int,int)>();
+                var cas = new List<Case>();
                 for (int j = 0; j < 50; j++)
                 {
-                    cas.Add((0, (i+j)%15));
+                    cas.Add(new Case(0, (i+j)%15));
                 }                
                 sss.Add(new Statistics(SentenceMembers.Addition, cas, i%10));
             }
             Statistics = sss;
         }
+
+        static BinaryFormatter formatter = new BinaryFormatter();
+
+        public static Data Open(string path)
+        {
+            using (FileStream fs = new FileStream(path, FileMode.Open))
+                return (Data)formatter.Deserialize(fs);
+        }
+
+        public void Save(string path)
+        {
+            using (FileStream fs = new FileStream(path, FileMode.CreateNew))
+                formatter.Serialize(fs, this);
+        }
+
     }
 }

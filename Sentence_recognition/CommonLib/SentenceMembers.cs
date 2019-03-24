@@ -5,6 +5,7 @@ namespace CommonLib
     // Члены предложения.
     // Переименуйте по желанию 
     [Flags]
+    [Serializable]
     public enum SentenceMembers
     {
         Subject     = 0b000001,

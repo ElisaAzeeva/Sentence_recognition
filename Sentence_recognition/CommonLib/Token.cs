@@ -1,8 +1,10 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System;
+using System.Diagnostics.Contracts;
 
 namespace CommonLib
 {
     // Здесь все понятно.
+    [Serializable]
     public class Token
     {
         public int Sentence { get; set; }

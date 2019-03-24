@@ -152,5 +152,22 @@ namespace Sentence_recognition
             Window.DataContext = data;
             WordList.ItemsSource = data.Statistics;
         }
+
+        private void Save(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (data == null) return; // TODO
+
+            SaveFileDialog openFileDialog = new SaveFileDialog
+            {
+                // Фильтр расширений открываемых файлов
+                Filter = "Результаты анализа (*.analyser)|*.analyser|Все файлы(*)|*",
+
+                // Название OpenFileDialog'a
+                Title = "Выберите файл для записи"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+                data.Save(openFileDialog.FileName);
+        }
     }
 }
