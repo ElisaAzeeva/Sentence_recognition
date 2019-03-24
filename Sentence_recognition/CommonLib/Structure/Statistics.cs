@@ -16,7 +16,6 @@ namespace CommonLib
         }
     }
 
-
     // Не знаю насколько удачная структура. Время покажет. 
     [Serializable]
     public class Statistics

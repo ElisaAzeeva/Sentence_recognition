@@ -10,10 +10,12 @@
         Height="600" 
         Width="900"
         x:Name="Window">
+    
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="Open"/>
         <CommandBinding Command="Save" Executed="Save"></CommandBinding>
     </Window.CommandBindings>
+    
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
         <converters:InverseBooleanConverter x:Key="Inverse" />
@@ -22,6 +24,7 @@
         <converters:SentenceMembersToTextDecorationCollectionConverter x:Key="SentenceMembersToTextDecorationCollection"/>
         <converters:CasesToStringMultiValueConverter x:Key="CasesToString" />
     </Window.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>

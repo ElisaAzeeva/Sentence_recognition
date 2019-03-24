@@ -37,41 +37,51 @@ namespace CommonLib
 
             progress?.Report((.0, "Загрузка файла."));
 
-            switch (Path.GetExtension(path))
+            try
             {
-                case ".txt":
-                    text = File.ReadAllText(path);
-                    break;
+                switch (Path.GetExtension(path))
+                {
+                    case ".txt":
+                        text = File.ReadAllText(path);
+                        break;
 
-                case ".doc":
-                    {
-                        TextReader reader = new FilterReader(path);
-                        using (reader)
-                            text = reader.ReadToEnd();
-                    }
-                    break;
-                case ".docx":
-                    {
-                        var wordDoc = WordprocessingDocument.Open(path, true);
-                        var body = wordDoc.MainDocumentPart.Document.Body;
-                        foreach (var child_element in body.ChildElements)
+                    case ".doc":
                         {
-                            var temp = child_element.InnerText;
-                            if (temp != "")
-                                text += temp + "\r\n";
+                            TextReader reader = new FilterReader(path);
+                            using (reader)
+                                text = reader.ReadToEnd();
                         }
-                    }
-                    break;
+                        break;
+                    case ".docx":
+                        {
+                            var wordDoc = WordprocessingDocument.Open(path, true);
+                            var body = wordDoc.MainDocumentPart.Document.Body;
+                            foreach (var child_element in body.ChildElements)
+                            {
+                                var temp = child_element.InnerText;
+                                if (temp != "")
+                                    text += temp + "\r\n";
+                            }
+                        }
+                        break;
 
-                case ".analyser":
-                    data = Data.Open(path);
-                    return (0, data); // TODO errors
+                    case ".analyser":
+                        data = Data.Open(path);
+                        progress?.Report((1.0, "Файл загружен."));
+                        return (ErrorCode.Ok, data);
 
-                default:
-                    return (ErrorCode.UnknownFileType, null);
+                    default:
+                        return (ErrorCode.UnknownFileType, null);
+                }
             }
-
-            return analyser.ParsingText(text, progress);
+            catch (Exception)
+            {
+                return (ErrorCode.Unknown, null);
+            }
+            ErrorCode e;
+            (e, data) = analyser.ParsingText(text, progress);
+            progress?.Report((1.0, "Файл загружен."));
+            return (e, data);
         }
 
         public static string GetText(Data data)
