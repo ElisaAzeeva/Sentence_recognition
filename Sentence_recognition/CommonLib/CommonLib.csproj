@@ -35,6 +35,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Sentence_recognition\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="EPocalipse.IFilter">
+      <HintPath>..\Sentence_recognition\EPocalipse.IFilter.dll</HintPath>
+    </Reference>
     <Reference Include="gren_consts">
       <HintPath>..\Sentence_recognition\gren_consts.dll</HintPath>
     </Reference>
@@ -62,22 +65,22 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analyser.cs" />
-    <Compile Include="Converters\DataContextSetConverter.cs" />
-    <Compile Include="Converters\InverseBooleanConverter.cs" />
-    <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
-    <Compile Include="Converters\SentenceMembersToTextDecorationCollectionConverter.cs" />
-    <Compile Include="Converters\SentenceMembersValueConverter.cs" />
-    <Compile Include="Converters\TEnumValueConverter.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="Analyser\Analyser.cs" />
+    <Compile Include="Interface\Converters\DataContextSetConverter.cs" />
+    <Compile Include="Interface\Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Interface\Converters\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Interface\Converters\SentenceMembersToTextDecorationCollectionConverter.cs" />
+    <Compile Include="Interface\Converters\SentenceMembersValueConverter.cs" />
+    <Compile Include="Interface\Converters\TEnumValueConverter.cs" />
+    <Compile Include="Structure\Data.cs" />
     <Compile Include="ErrorCode.cs" />
-    <Compile Include="MyTextDecorations.cs" />
+    <Compile Include="Interface\MyTextDecorations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecognitionAPI.cs" />
-    <Compile Include="SentenceMembers.cs" />
-    <Compile Include="Split.cs" />
-    <Compile Include="Statistics.cs" />
-    <Compile Include="Token.cs" />
+    <Compile Include="Analyser\RecognitionAPI.cs" />
+    <Compile Include="Structure\SentenceMembers.cs" />
+    <Compile Include="Analyser\Split.cs" />
+    <Compile Include="Structure\Statistics.cs" />
+    <Compile Include="Structure\Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

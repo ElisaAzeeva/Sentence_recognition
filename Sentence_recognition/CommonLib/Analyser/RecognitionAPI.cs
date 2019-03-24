@@ -6,6 +6,7 @@ using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 
 using WPFRun = System.Windows.Documents.Run;
+using EPocalipse.IFilter;
 
 namespace CommonLib
 {
@@ -42,7 +43,13 @@ namespace CommonLib
                     text = File.ReadAllText(path);
                     break;
 
-                //case ".doc":
+                case ".doc":
+                    {
+                        TextReader reader = new FilterReader(path);
+                        using (reader)
+                            text = reader.ReadToEnd();
+                    }
+                    break;
                 case ".docx":
                     {
                         var wordDoc = WordprocessingDocument.Open(path, true);
@@ -63,16 +70,8 @@ namespace CommonLib
                 default:
                     return (ErrorCode.UnknownFileType, null);
             }
-            
-            var sentenses = text.DivideText().ToList();
 
-            List<Token> w = analyser.ParsingText(sentenses, progress)
-                .SelectMany(x => x)
-                .ToList();
-
-            data = new Data(sentenses, w);
-
-            return (0, data);
+            return analyser.ParsingText(text, progress);
         }
 
         public static string GetText(Data data)

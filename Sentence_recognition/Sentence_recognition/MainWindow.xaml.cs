@@ -98,7 +98,7 @@ namespace Sentence_recognition
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 // Фильтр расширений открываемых файлов
-                Filter = "Файлы Word (*.docx)|*.docx|Текстовые файлы (*.txt)|*.txt|Все файлы(*)|*",
+                Filter = "Файлы Word (*.doc; *.docx)|*.doc; *.docx|Текстовые файлы (*.txt)|*.txt|Все файлы(*)|*",
 
                 // Название OpenFileDialog'a
                 Title = "Выберите файл для чтения"

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SolarixGrammarEngineNET;
 using CommonLib;
+using System.Linq;
 
 namespace Sentence_recognition
 {
@@ -39,44 +40,62 @@ namespace Sentence_recognition
 
         public ErrorCode Init()
         {
-            hEngine = GrammarEngine.sol_CreateGrammarEngineW(dictionaryPath);
+            try
+            {
+                hEngine = GrammarEngine.sol_CreateGrammarEngineW(dictionaryPath);
 
-            if (hEngine == IntPtr.Zero)
-                return ErrorCode.NoDictionary;
+                if (hEngine == IntPtr.Zero)
+                    return ErrorCode.NoDictionary;
 
-            int r = GrammarEngine.sol_DictionaryVersion(hEngine);
+                int r = GrammarEngine.sol_DictionaryVersion(hEngine);
 
-            if (r == -1)
-                return ErrorCode.NoDictionary2;
+                if (r == -1)
+                    return ErrorCode.NoDictionary2;
 
-            // Проверим, что там есть русский лексикон.
-            int ie1 = GrammarEngine.sol_FindEntry(
-                hEngine,
-                "МАМА",
-                GrammarEngineAPI.NOUN_ru,
-                GrammarEngineAPI.RUSSIAN_LANGUAGE);
+                // Проверим, что там есть русский лексикон.
+                int ie1 = GrammarEngine.sol_FindEntry(
+                    hEngine,
+                    "МАМА",
+                    GrammarEngineAPI.NOUN_ru,
+                    GrammarEngineAPI.RUSSIAN_LANGUAGE);
 
-            if (ie1 == -1)
-                return ErrorCode.NoRussion;
+                if (ie1 == -1)
+                    return ErrorCode.NoRussion;
+            }
+            catch (Exception)
+            {
+                return ErrorCode.Unknown;
+            }
 
             return ErrorCode.Ok;
         }
 
-        public List<List<Token>> ParsingText(List<string> sentenses, IProgress<(double, string)> progress)
+        public (ErrorCode, Data) ParsingText(string text, IProgress<(double, string)> progress)
         {
-            List<List<Token>> ok = new List<List<Token>>();
-            int i = 0;
-            foreach (string s in sentenses)
+            try
             {
-                progress?.Report(((double)i / (sentenses.Count - 1),
-                    $"Обработка предложения: {i + 1}/{sentenses.Count}"));
-                ok.Add(Parsing_FULL(s, i++));
-            }
+                var sentenses = text.DivideText().ToList();
+                List<List<Token>> ok = new List<List<Token>>();
 
-            return ok;
+                int i = 0;
+                foreach (string s in sentenses)
+                {
+                    progress?.Report(((double)i / (sentenses.Count - 1),
+                        $"Обработка предложения: {i + 1}/{sentenses.Count}"));
+                    ok.Add(ParsingSentence(s, i++));
+                }
+
+                List<Token> w = ok.SelectMany(x => x).ToList();
+
+                return (ErrorCode.Ok, new Data(sentenses, w));
+            }
+            catch (Exception)
+            {
+                return (ErrorCode.Unknown, null);
+            }
         }
 
-        public List<Token> Parsing_FULL(string Sent, int number_senten)
+        public List<Token> ParsingSentence(string Sent, int number_senten)
         {
             List<Token> chast = Split.DivideSentance(Sent, number_senten);
 
@@ -117,11 +136,8 @@ namespace Sentence_recognition
 
             for (int Leaff = 0; Leaff < leafsCount; Leaff++)
             {
-                //НЕЕЕЕЕ ЛЕЕЕЕЗЬЬЬЬ 
                 IntPtr pLeaf = GrammarEngine.sol_GetLeaf(rf, Leaff); //Указатель на текущий лист
-
                 int prKey = GrammarEngine.sol_GetNodeIEntry(hEngine, pLeaf); //Первичный ключ словарной статьи(для определения части речи)
-
                 var type = (TypeOfWord)GrammarEngine.sol_GetEntryClass(hEngine, prKey); // id части речи
                 var link = GrammarEngine.sol_GetLeafLinkType(rf, Leaff); // Связь листа и его корня (предыдущего листа)
                 var pos = GrammarEngine.sol_GetNodePosition(pLeaf);

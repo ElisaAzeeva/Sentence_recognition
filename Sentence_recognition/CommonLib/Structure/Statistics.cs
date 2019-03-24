@@ -6,8 +6,8 @@ namespace CommonLib
     [Serializable]
     public struct Case
     {
-        int sentence;
-        int offset;
+        public int sentence;
+        public int offset;
 
         public Case(int sentence, int offset)
         {

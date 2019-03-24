@@ -11,7 +11,9 @@ namespace CommonLib.Converters
         {
 
             var length = (int) values[0];
-            var (sentence, offset) = ((int,int))values[1];
+            var @case = (Case)values[1];
+            var sentence = @case.sentence;
+            var offset = @case.offset;
             var data = values[2] as Data;
 
             if (parameter == null)
