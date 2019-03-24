@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SolarixGrammarEngineNET;
 using CommonLib;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Sentence_recognition
 {
@@ -124,7 +125,7 @@ namespace Sentence_recognition
             }
             words.Sort((w1, w2) => w1.Pos.CompareTo(w2.Pos));
 
-            for (int i = 0; i < chast.Count; i++)
+            for (int i = 0; i < Math.Min(chast.Count,words.Count); i++)
                 chast[i].Type = words[i].TypeInSentence;
 
             return chast;

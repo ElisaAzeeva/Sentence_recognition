@@ -109,7 +109,6 @@ namespace CommonLib
                         sum += data.Sentenses[i].Length;
                     currentSentence = t.Sentence;
                     offset += sum;
-                    //curent = 0;
                 }
 
                 yield return new WPFRun(text.Substring(curent, offset + t.Offset - curent));
