@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CommonLib
@@ -25,19 +26,14 @@ namespace CommonLib
             Sentenses = sentenses;
             Tokens = tokens;
 
-            // TODO: DEBUG ONLY
-            var sss = new List<Statistics>();
-
-            for (int i = 0; i < 50; i++)
-            {
-                var cas = new List<Case>();
-                for (int j = 0; j < 50; j++)
-                {
-                    cas.Add(new Case(0, (i+j)%15));
-                }                
-                sss.Add(new Statistics(SentenceMembers.Addition, cas, i%10));
-            }
-            Statistics = sss;
+            Statistics = (from t in Tokens
+                          where t.Type != 0
+                          group new Case(t.Sentence, t.Offset) by new {
+                              word = Sentenses[t.Sentence].Substring(t.Offset, t.Length),
+                              type = t.Type,
+                              length = t.Length
+                          } into g
+                          select new Statistics(g.Key.type, g.ToList(), g.Key.length)).ToList();
         }
 
         static BinaryFormatter formatter = new BinaryFormatter();
