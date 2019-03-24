@@ -38,12 +38,12 @@ namespace CommonLib
 
             // Init DoubleUnderline
             {
-                var sp = new StackPanel();
-                sp.Children.Add(new Rectangle { Width = 2, Height = 1, Fill = Brushes.Black });
-                sp.Children.Add(new Rectangle { Width = 2, Height = 4 });
-                sp.Children.Add(new Rectangle { Width = 2, Height = 1, Fill = Brushes.Black });
 
-                
+                var sp = new StackPanel();
+                sp.Children.Add(new Rectangle { Width = 1, Height = 1, Fill = Brushes.Black});
+                sp.Children.Add(new Rectangle { Width = 1, Height = 4});
+                sp.Children.Add(new Rectangle { Width = 1, Height = 1, Fill = Brushes.Black});
+
                 DoubleUnderline = new TextDecorationCollection
                 {
                     new TextDecoration
@@ -55,50 +55,34 @@ namespace CommonLib
                         {
                             TileMode = TileMode.Tile,
                             Visual = sp,
-                        }, 0.2)
+                        }, 0.25)
                     }
                 };
             }
 
             // Init WavyUnderline
             {
-                var h = 2;
-                var w = 2;
+                Pen path_pen = new Pen(new SolidColorBrush(Colors.Black), 0.2);
+                path_pen.EndLineCap = PenLineCap.Square;
+                path_pen.StartLineCap = PenLineCap.Square;
+
+                Point path_start = new Point(0, 1);
+                BezierSegment path_segment = new BezierSegment(new Point(1, 0), new Point(2, 2), new Point(3, 1), true);
+                PathFigure path_figure = new PathFigure(path_start, new PathSegment[] { path_segment }, false);
+                PathGeometry path_geometry = new PathGeometry(new PathFigure[] { path_figure });
+
+                DrawingBrush squiggly_brush = new DrawingBrush();
+                squiggly_brush.Viewport = new Rect(0, 0, 6, 5);
+                squiggly_brush.ViewportUnits = BrushMappingMode.Absolute;
+                squiggly_brush.TileMode = TileMode.Tile;
+                squiggly_brush.Drawing = new GeometryDrawing(null, path_pen, path_geometry);
+
+                TextDecoration squiggly = new TextDecoration();
+                squiggly.Pen = new Pen(squiggly_brush, 5);
+
 
                 WavyUnderline = new TextDecorationCollection {
-                    new TextDecoration {
-                        PenThicknessUnit = TextDecorationUnit.FontRenderingEmSize,
-                        //PenOffset = 1,
-                        Location = TextDecorationLocation.Underline,
-                        Pen = new Pen(new VisualBrush
-                        {
-                            Stretch = Stretch.None,
-                            TileMode = TileMode.Tile,
-                            ViewportUnits = BrushMappingMode.Absolute,
-                            Viewport = new Rect(0, 0, 3 * w, 3 * h),
-                            Visual = new Path
-                            {
-                                Stroke = Brushes.Black,
-                                StrokeThickness = 0.8,
-                                StrokeEndLineCap = PenLineCap.Square,
-                                StrokeStartLineCap = PenLineCap.Square,
-                                Data = new PathGeometry(
-                                    new List<PathFigure>{
-                                        new PathFigure(
-                                            new Point(0,h),
-                                            new List<BezierSegment>{
-                                                new BezierSegment(
-                                                    new Point(w,0),
-                                                    new Point(2*w,2*h),
-                                                    new Point(3*w,h),
-                                                    true)
-                                            },
-                                            false
-                                            )
-                                    })
-                            }
-                        }, 0.2*h)
-                    }
+                    squiggly
                 };
             }
 

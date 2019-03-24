@@ -3,9 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Sentence_recognition"
         xmlns:converters="clr-namespace:CommonLib.Converters;assembly=CommonLib"
-        xmlns:lib="clr-namespace:CommonLib;assembly=CommonLib..NETFramework,Version=v4.6.1"
         xmlns:commonLib="clr-namespace:CommonLib;assembly=CommonLib"
         mc:Ignorable="d"
         Title="MainWindow" 
@@ -36,7 +34,7 @@
             <!-- 15 - good -->
             <TextBlock 
                 x:Name="block" 
-                FontSize="15" 
+                FontSize="16" 
                 TextWrapping="Wrap"
                 />
         </Border>
@@ -53,7 +51,7 @@
                     >
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock FontSize="20">
+                            <TextBlock FontSize="15">
                                 <TextBlock.Inlines>
                                     <Run>
                                         <Run.TextDecorations>
