@@ -10,7 +10,8 @@ namespace CommonLib
         {
             // (?<=a)b (positive lookbehind) matches the b (and only the b) in cab,
             // but does not match bed or debt.
-            string pattern = "(?<=[.!?])";
+            text = text.Replace("...", "…");
+            string pattern = "(?<=[.!?…])";
             return Regex.Split(text, pattern, RegexOptions.Multiline
                 | RegexOptions.CultureInvariant).ToList();
         }
@@ -18,7 +19,7 @@ namespace CommonLib
         public static List<Token> DivideSentance(
             string sentence, int number_senten) {
             List<Token> chast = new List<Token>();
-            MatchCollection matches = Regex.Matches(sentence, @"\p{L}+|[,.?!()\[\]\d]",
+            MatchCollection matches = Regex.Matches(sentence, @"\p{L}+|[,;\-.?!()\[\]\d]",
                 RegexOptions.Multiline | RegexOptions.CultureInvariant);
 
             return matches
