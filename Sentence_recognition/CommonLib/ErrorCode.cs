@@ -19,7 +19,8 @@ namespace CommonLib
         [Description("Russian language is missing in lexicon")]
         NoRussion = 3,
         UnknownFileType = 4,
-        Unknown = 5
+        Unknown = 5,
+        FileIsEmpty = 6
     }
 
     public static class EnumHelper

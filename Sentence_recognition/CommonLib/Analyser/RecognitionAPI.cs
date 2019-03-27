@@ -78,6 +78,8 @@ namespace CommonLib
             {
                 return (ErrorCode.Unknown, null);
             }
+            if (text.Trim()=="")
+                return (ErrorCode.FileIsEmpty, null);
             ErrorCode e;
             (e, data) = analyser.ParsingText(text, progress);
             progress?.Report((1.0, "Файл загружен."));
