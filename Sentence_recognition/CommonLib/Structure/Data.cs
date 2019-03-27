@@ -29,7 +29,7 @@ namespace CommonLib
             Statistics = (from t in Tokens
                           where t.Type != 0
                           group new Case(t.Sentence, t.Offset) by new {
-                              word = Sentenses[t.Sentence].Substring(t.Offset, t.Length),
+                              word = Sentenses[t.Sentence].Substring(t.Offset, t.Length).ToLowerInvariant(),
                               type = t.Type,
                               length = t.Length
                           } into g

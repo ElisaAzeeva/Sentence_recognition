@@ -19,7 +19,8 @@ namespace CommonLib
         public static List<Token> DivideSentance(
             string sentence, int number_senten) {
             List<Token> chast = new List<Token>();
-            MatchCollection matches = Regex.Matches(sentence, @"\p{L}+|[,;.?!()\[\]\d]",
+
+            MatchCollection matches = Regex.Matches(sentence, @"[\p{L}|\-]+|[,;\-.?!()\[\]\d]",
                 RegexOptions.Multiline | RegexOptions.CultureInvariant);
 
             return matches
