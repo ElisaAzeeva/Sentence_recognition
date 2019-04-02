@@ -12,7 +12,7 @@ namespace Sentence_recognition
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window
     {
         #region Properties
 
@@ -72,13 +72,6 @@ namespace Sentence_recognition
 
         private RecognitionAPI recognazer;
         private Data data;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public MainWindow()
         {
@@ -151,7 +144,7 @@ namespace Sentence_recognition
         {
             if (data == null) return;
             block.Inlines.Clear();
-            block.Inlines.AddRange(RecognitionAPI.GetRuns(data, SentenceMembers));
+            block.Inlines.AddRange(data.GetRuns(SentenceMembers));
             Window.DataContext = data;
             WordList.ItemsSource = data.Statistics;
         }
