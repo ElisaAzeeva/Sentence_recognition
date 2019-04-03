@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Sentence_recognition\bin\Debug\test_text_1.txt = Sentence_recognition\bin\Debug\test_text_1.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicLibrary", "DynamicLibrary\DynamicLibrary.csproj", "{45C3EA34-C54A-4DB1-9ABB-4E8154225AF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B500793-57F9-4D55-95B1-FC83DDA1B42E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C3EA34-C54A-4DB1-9ABB-4E8154225AF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C3EA34-C54A-4DB1-9ABB-4E8154225AF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C3EA34-C54A-4DB1-9ABB-4E8154225AF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C3EA34-C54A-4DB1-9ABB-4E8154225AF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
+using WPFRun = System.Windows.Documents.Run;
+
 namespace CommonLib
 {
     [Serializable]
@@ -50,5 +52,43 @@ namespace CommonLib
                 formatter.Serialize(fs, this);
         }
 
+        public string GetText()
+        {
+            return Sentenses.Aggregate("", (s1, s2) => s1 + s2);
+        }
+
+        public IEnumerable<WPFRun> GetRuns(SentenceMembers sm)
+        {
+            int curent = 0;
+            string text = GetText();
+
+            int currentSentence = 0;
+            int offset = 0;
+
+            foreach (var t in Tokens)
+            {
+                if (!sm.HasFlag(t.Type))
+                    continue;
+
+                if (t.Sentence != currentSentence)
+                {
+                    var sum = 0;
+                    for (int i = currentSentence; i < t.Sentence; i++)
+                        sum += Sentenses[i].Length;
+                    currentSentence = t.Sentence;
+                    offset += sum;
+                }
+
+                yield return new WPFRun(text.Substring(curent, offset + t.Offset - curent));
+
+                yield return new WPFRun(text.Substring(offset + t.Offset, t.Length))
+                {
+                    TextDecorations = MyTextDecorations.GetDecorationFromType(t.Type)
+                };
+
+                curent = offset + t.Offset + t.Length;
+            }
+            yield return new WPFRun(text.Substring(curent));
+        }
     }
 }
