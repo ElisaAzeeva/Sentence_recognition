@@ -120,7 +120,7 @@ namespace Sentence_recognition
                 });
 
                 Parsing(hRoot);
-
+                //TODO: в примере удаление делается вне цикла, почему оно тут?
                 GrammarEngine.sol_DeleteResPack(hPack11);
             }
             words.Sort((w1, w2) => w1.Pos.CompareTo(w2.Pos));
